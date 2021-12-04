@@ -18,15 +18,15 @@ class PlayerControllerPreFlopRoll : PlayerControllerPrePost() {
     }
 
     public override fun decidePreFlop(
-        player: Player?, gameHand: GameHand?,
-        cards: List<Card>?
+        player: Player, gameHand: GameHand,
+        cards: List<Card>
     ): BettingDecision {
         val card1 = cards!![0]
         val card2 = cards[1]
         return if (card1.number == card2.number) {
             BettingDecision.RAISE_MIN
         } else if (card1.number.power + card2.number.power > 16
-            || canCheck(gameHand!!, player)
+            || canCheck(gameHand, player)
         ) {
             BettingDecision.CALL
         } else {
@@ -34,7 +34,7 @@ class PlayerControllerPreFlopRoll : PlayerControllerPrePost() {
         }
     }
 
-    public override fun decideAfterFlop(player: Player?, gameHand: GameHand?, cards: List<Card>?): BettingDecision {
+    public override fun decideAfterFlop(player: Player, gameHand: GameHand, cards: List<Card>): BettingDecision {
         val handPower = HandPowerRanker.rank(cards)
         val handPowerType = handPower.handPowerType
         return if (handPowerType == HandPowerType.HIGH_CARD) {

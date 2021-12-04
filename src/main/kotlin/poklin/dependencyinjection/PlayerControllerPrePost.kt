@@ -9,8 +9,8 @@ import poklin.model.cards.Card
 
 abstract class PlayerControllerPrePost : PlayerController() {
     public override fun decide(
-        player: Player?, gameHand: GameHand?,
-        cards: List<Card>?
+        player: Player, gameHand: GameHand,
+        cards: List<Card>
     ): BettingDecision {
         return if (gameHand!!.bettingRoundName == BettingRoundName.PRE_FLOP) {
             decidePreFlop(player, gameHand, cards)
@@ -24,6 +24,6 @@ abstract class PlayerControllerPrePost : PlayerController() {
         return bettingRound.highestBet == bettingRound.getBetForPlayer(player!!)
     }
 
-    protected abstract fun decidePreFlop(player: Player?, gameHand: GameHand?, cards: List<Card>?): BettingDecision
-    protected abstract fun decideAfterFlop(player: Player?, gameHand: GameHand?, cards: List<Card>?): BettingDecision
+    protected abstract fun decidePreFlop(player: Player, gameHand: GameHand, cards: List<Card>): BettingDecision
+    protected abstract fun decideAfterFlop(player: Player, gameHand: GameHand, cards: List<Card>): BettingDecision
 }

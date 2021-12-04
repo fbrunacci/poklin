@@ -12,7 +12,7 @@ object HandPowerRanker {
     private val cardNumberComparator: Comparator<CardNumber?> =
         Comparator { cardNumber1, cardNumber2 -> cardNumber1!!.power - cardNumber2!!.power }
 
-    fun rank(cards: List<Card>?): HandPower {
+    fun rank(cards: List<Card>): HandPower {
         val numberGroup = getNumberGroup(cards)
         val suitGroup = getSuitGroup(cards)
         val cardsSortedByNumber = getCardsSortedByNumber(cards)
@@ -175,14 +175,14 @@ object HandPowerRanker {
         return bestCardsNumberInList(cards)
     }
 
-    private fun bestCardsNumberInList(cards: List<Card?>?): List<CardNumber?> {
+    private fun bestCardsNumberInList(cards: List<Card>): List<CardNumber?> {
         val cardNumbers = cardsToCardNumber(cards)
         Collections.sort(cardNumbers, cardNumberComparator)
         Collections.reverse(cardNumbers)
         return cardNumbers.subList(0, 5)
     }
 
-    private fun getCardsSortedByNumber(cards: List<Card>?): List<Card?> {
+    private fun getCardsSortedByNumber(cards: List<Card>): List<Card> {
         val cardsSortedByNumber: List<Card> = ArrayList(cards)
         Collections.sort(cardsSortedByNumber)
         return cardsSortedByNumber

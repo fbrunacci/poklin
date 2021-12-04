@@ -13,5 +13,5 @@ abstract class PlayerController {
         return decide(player, gameHand, cards)
     }
 
-    protected abstract fun decide(player: Player?, gameHand: GameHand?, cards: List<Card>?): BettingDecision
+    protected abstract fun decide(player: Player, gameHand: GameHand, cards: List<Card>): BettingDecision
 }

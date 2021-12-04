@@ -41,9 +41,7 @@ open class GameHandController @Inject constructor(
         ) {
             haveWinner = playRound(gameHand)
         }
-        if (!haveWinner) {
-            showDown(gameHand)
-        }
+        showDown(gameHand)
     }
 
     private fun createGameHand(game: Game): GameHand {
@@ -77,13 +75,9 @@ open class GameHandController @Inject constructor(
 
         //logger.log("Pots: "+gameHand.getPots().toString());
 
-        // Check if we have a winner
-        // TODO cas avec egalité ?
+        // Check if we have only one player left
         if (gameHand.table.getActivePlayers().size == 1) {
-            val winner = gameHand.table.currentPlayer()
-            logger.log(winner.toString() + ": WIN! +" + gameHand.totalBets + "$")
-            winner!!.addMoney(gameHand.totalBets)
-            return true
+            return true // => the round is over
         }
         return false
     }
@@ -125,10 +119,14 @@ open class GameHandController @Inject constructor(
         DD++
     }
 
-    private fun getWinnersByHandPower(gameHand: GameHand): LinkedHashMap<Int?, List<Player>> {
-        val activePlayers: Iterable<Player> = gameHand.table.getActivePlayers()
-        val sharedCards: List<Card> = gameHand.sharedCards
+    private fun getWinnersByHandPower(gameHand: GameHand): Map<Int?, List<Player>> {
+        val activePlayers: List<Player> = gameHand.table.getActivePlayers()
         val winners: MutableMap<Int?, MutableList<Player>> = HashMap()
+        if ( activePlayers.size == 1 ) {
+            val winner = activePlayers.first()
+            return mapOf(winner.seat to listOf(winner))
+        }
+        val sharedCards: List<Card> = gameHand.sharedCards
         for (player in activePlayers) {
             val mergeCards: MutableList<Card> = ArrayList(player.holeCards)
             mergeCards.addAll(sharedCards)
@@ -141,7 +139,7 @@ open class GameHandController @Inject constructor(
         val sortedWinners = LinkedHashMap<Int?, List<Player>>()
         winners.entries
             .stream()
-            .sorted(java.util.Map.Entry.comparingByKey<Int?, List<Player>>())
+            .sorted(java.util.Map.Entry.comparingByKey<Int, List<Player>>())
             .forEachOrdered { (key, value): Map.Entry<Int?, List<Player>> -> sortedWinners[key] = value }
         return sortedWinners
     }
@@ -273,10 +271,9 @@ open class GameHandController @Inject constructor(
                 winnerText.append(", ")
             }
             winnerText.append(String.format("%s wins $ %d", winner, potShare))
-            //notifyPlayersUpdated(true);
+            winner.addMoney(potShare)
         }
         winnerText.append('.')
-        //notifyMessage(winnerText.toString());
         logger.log(winnerText.toString())
     }
 

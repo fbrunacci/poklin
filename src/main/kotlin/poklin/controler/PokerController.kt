@@ -3,13 +3,14 @@ package poklin.controler
 import poklin.utils.ILogger
 import poklin.GameProperties
 import poklin.Game
+import poklin.Player
 import javax.inject.Inject
 
 class PokerController @Inject constructor(
     private val gameHandController: GameHandController,
     private val logger: ILogger, private val gameProperties: GameProperties
 ) {
-    private val game: Game
+    private val game = Game(gameProperties.players)
     fun play() {
         var i = 0
         while (i < gameProperties.numberOfHands && gameProperties.nbPlayersWithMoney > 1) {
@@ -36,6 +37,5 @@ class PokerController @Inject constructor(
     init {
 
         //Logger.setLogger(logger);
-        game = Game(gameProperties.players)
     }
 }

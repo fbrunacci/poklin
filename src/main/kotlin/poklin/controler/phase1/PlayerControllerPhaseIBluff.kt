@@ -15,8 +15,8 @@ class PlayerControllerPhaseIBluff : PlayerControllerPrePost() {
     }
 
     public override fun decidePreFlop(
-        player: Player?, gameHand: GameHand?,
-        cards: List<Card>?
+        player: Player, gameHand: GameHand,
+        cards: List<Card>
     ): BettingDecision {
         val card1 = cards!![0]
         val card2 = cards[1]
@@ -24,7 +24,7 @@ class PlayerControllerPhaseIBluff : PlayerControllerPrePost() {
         return if (card1.number == card2.number || sumPower <= 8) {
             BettingDecision.RAISE_MIN
         } else {
-            if (sumPower > 16 || canCheck(gameHand!!, player)) {
+            if (sumPower > 16 || canCheck(gameHand, player)) {
                 BettingDecision.CALL
             } else {
                 BettingDecision.FOLD
@@ -33,8 +33,8 @@ class PlayerControllerPhaseIBluff : PlayerControllerPrePost() {
     }
 
     public override fun decideAfterFlop(
-        player: Player?, gameHand: GameHand?,
-        cards: List<Card>?
+        player: Player, gameHand: GameHand,
+        cards: List<Card>
     ): BettingDecision {
         val handPower = HandPowerRanker.rank(cards)
         val handPowerType = handPower.handPowerType
@@ -43,7 +43,7 @@ class PlayerControllerPhaseIBluff : PlayerControllerPrePost() {
         } else if (handPowerType.power >= HandPowerType.STRAIGHT.power) {
             BettingDecision.RAISE_MIN
         } else {
-            if (canCheck(gameHand!!, player)) {
+            if (canCheck(gameHand, player)) {
                 BettingDecision.CALL
             } else BettingDecision.FOLD
         }

@@ -26,9 +26,12 @@ class PlayRoundTest {
             val player1Controller = PlayerControllerBettingDecisionFifo()
             val player2Controller = PlayerControllerBettingDecisionFifo()
 
+            val player1 = Player(1, 1000, player1Controller)
+            val player2 = Player(2, 1000, player2Controller)
+
             init {
-                addPlayer(Player(1, 1000, player1Controller))
-                addPlayer(Player(2, 1000, player2Controller))
+                addPlayer(player1)
+                addPlayer(player2)
             }
         }
     }
@@ -42,6 +45,23 @@ class PlayRoundTest {
         val injector = Guice.createInjector(TexasModule(), TestGamePropertiesModule())
         gameHandController = injector.getInstance(GameHandController::class.java)
         testGameProperties = injector.getInstance(GameProperties::class.java) as TestGameProperties
+    }
+
+    @Test
+    fun playRound() {
+        val gameHand = GameHand(testGameProperties.players, 10, 20)
+        with(testGameProperties) {
+            player2Controller.pushDecision(RAISE_CUSTOM(50))
+            player1Controller.pushDecision(BettingDecision.CALL)
+            player2Controller.pushDecision(BettingDecision.FOLD)
+        }
+        gameHandController.play(gameHand)
+
+        with(testGameProperties) {
+            println("=====================")
+            println(player1)
+            println(player2)
+        }
     }
 
     @Test
