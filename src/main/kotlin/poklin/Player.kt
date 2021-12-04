@@ -26,10 +26,17 @@ class Player(
     override fun toString(): String {
         val stringBuilder = StringBuilder()
         stringBuilder.append("Player#")
-        stringBuilder.append("$seat ($money$) ".padEnd(10))
+        stringBuilder.append("$seat ($money$) ".padEnd(11))
         if (holeCards != null) {
-            stringBuilder.append(holeCards.toString())
+            stringBuilder.append(holeCards.toString().padEnd(10))
         }
+        return stringBuilder.toString()
+    }
+
+    fun info(): String {
+        val stringBuilder = StringBuilder()
+        stringBuilder.append("Player#")
+        stringBuilder.append("$seat ($money$) ".padEnd(11))
         return stringBuilder.toString()
     }
 

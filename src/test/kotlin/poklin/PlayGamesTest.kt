@@ -9,8 +9,8 @@ import org.junit.Test
 import poklin.PlayGamesTest.TestGamePropertiesModule.TestGameProperties
 import poklin.controler.GameHandController
 import poklin.controler.PokerController
-import poklin.controler.phase1.PlayerControllerPhaseIBluff
-import poklin.controler.phase1.PlayerControllerPhaseINormal
+import poklin.controler.phase1.PlayerControllerBluff
+import poklin.controler.phase1.PlayerControllerNormal
 import poklin.dependencyinjection.TexasModule
 import poklin.utils.ConsoleLogger
 import poklin.utils.ILogger
@@ -23,11 +23,11 @@ class PlayGamesTest {
         }
         class TestGameProperties : GameProperties(15, 1000, 20, 10) {
             init {
-                addPlayer(Player(1, 1000, PlayerControllerPhaseIBluff()))
-                addPlayer(Player(2, 1000, PlayerControllerPhaseIBluff()))
-                addPlayer(Player(3, 1000, PlayerControllerPhaseINormal()))
-                addPlayer(Player(4, 1000, PlayerControllerPhaseINormal()))
-                addPlayer(Player(5, 1000, PlayerControllerPhaseINormal()))
+                addPlayer(Player(1, 1000, PlayerControllerBluff()))
+                addPlayer(Player(2, 1000, PlayerControllerBluff()))
+                addPlayer(Player(3, 1000, PlayerControllerNormal()))
+                addPlayer(Player(4, 1000, PlayerControllerNormal()))
+                addPlayer(Player(5, 1000, PlayerControllerNormal()))
             }
         }
     }
@@ -45,11 +45,16 @@ class PlayGamesTest {
     }
 
     @Test
-    fun play100Games() {
-        for (i in 0..99) {
-            GameHandController.DD = 0
+    fun play100Round() {
+        GameHandController.DD = 0
+        for (i in 1..100) {
             val pokerController = injector.getInstance(PokerController::class.java)
             pokerController.play()
+
+            val playerWithMoney = testGameProperties.players.filter { player -> player.money > 0 }
+            if ( playerWithMoney.size == 1 ) {
+                testGameProperties.players.forEach { player -> player.money = 1000 }
+            }
         }
     }
 }

@@ -9,9 +9,9 @@ import poklin.model.bet.BettingDecision
 import poklin.model.cards.Card
 import javax.inject.Inject
 
-class PlayerControllerPhaseINormal : PlayerControllerPrePost() {
+class PlayerControllerBluff : PlayerControllerPrePost() {
     override fun toString(): String {
-        return "PhaseI normal"
+        return "bluff"
     }
 
     public override fun decidePreFlop(
@@ -20,28 +20,32 @@ class PlayerControllerPhaseINormal : PlayerControllerPrePost() {
     ): BettingDecision {
         val card1 = cards!![0]
         val card2 = cards[1]
-        return if (card1.number == card2.number) {
+        val sumPower = card1.number.power + card2.number.power
+        return if (card1.number == card2.number || sumPower <= 8) {
             BettingDecision.RAISE_MIN
-        } else if (card1.number.power + card2.number.power > 16
-            || canCheck(gameHand, player)
-        ) {
-            BettingDecision.CALL
         } else {
-            BettingDecision.FOLD
+            if (sumPower > 16 || canCheck(gameHand, player)) {
+                BettingDecision.CALL
+            } else {
+                BettingDecision.FOLD
+            }
         }
     }
 
-    public override fun decideAfterFlop(player: Player, gameHand: GameHand, cards: List<Card>): BettingDecision {
+    public override fun decideAfterFlop(
+        player: Player, gameHand: GameHand,
+        cards: List<Card>
+    ): BettingDecision {
         val handPower = HandPowerRanker.rank(cards)
         val handPowerType = handPower.handPowerType
         return if (handPowerType == HandPowerType.HIGH_CARD) {
-            if (canCheck(gameHand!!, player)) {
-                BettingDecision.CALL
-            } else BettingDecision.FOLD
+            BettingDecision.RAISE_MIN
         } else if (handPowerType.power >= HandPowerType.STRAIGHT.power) {
             BettingDecision.RAISE_MIN
         } else {
-            BettingDecision.CALL
+            if (canCheck(gameHand, player)) {
+                BettingDecision.CALL
+            } else BettingDecision.FOLD
         }
     }
 }

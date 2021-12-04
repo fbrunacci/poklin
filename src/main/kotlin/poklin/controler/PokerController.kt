@@ -28,7 +28,7 @@ class PokerController @Inject constructor(
         logger.log("Number of hands played: " + game.gameHandsCount())
         for (player in game.players) {
             logger.log(
-                player.toString() + "(" + player.playerController.toString() + ")" + ": " + player
+                player.info() + " - " + player.playerController.toString().padEnd(8) + " : " + player
                     .money + "$"
             )
         }
