@@ -46,7 +46,7 @@ class PlayGamesTest {
 
     @Test
     fun play100Games() {
-        for (i in 0..9) {
+        for (i in 0..99) {
             GameHandController.DD = 0
             val pokerController = injector.getInstance(PokerController::class.java)
             pokerController.play()

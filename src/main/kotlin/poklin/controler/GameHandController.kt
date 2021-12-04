@@ -78,10 +78,11 @@ open class GameHandController @Inject constructor(
         //logger.log("Pots: "+gameHand.getPots().toString());
 
         // Check if we have a winner
+        // TODO cas avec egalité ?
         if (gameHand.table.getActivePlayers().size == 1) {
             val winner = gameHand.table.currentPlayer()
-            winner!!.addMoney(gameHand.totalBets)
             logger.log(winner.toString() + ": WIN! +" + gameHand.totalBets + "$")
+            winner!!.addMoney(gameHand.totalBets)
             return true
         }
         return false
@@ -117,12 +118,11 @@ open class GameHandController @Inject constructor(
         )
         gameHand.applyDecision(player, bettingDecision, gameProperties, handStrength)
         val bettingRound = gameHand.currentBettingRound
-        DD++
         logger.log(
             player.toString() + ": " + bettingDecision + " "
                     + bettingRound.getBetForPlayer(player) + "$"
         )
-        //logger.log("POTS :"+bettingRound.getPots().toString());
+        DD++
     }
 
     private fun getWinnersByHandPower(gameHand: GameHand): LinkedHashMap<Int?, List<Player>> {

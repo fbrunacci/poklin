@@ -26,7 +26,7 @@ class Player(
     override fun toString(): String {
         val stringBuilder = StringBuilder()
         stringBuilder.append("Player #")
-        stringBuilder.append("$seat($money)$")
+        stringBuilder.append(" $seat($money$) ".padEnd(10))
         if (holeCards != null) {
             stringBuilder.append(holeCards.toString())
         }
@@ -43,6 +43,8 @@ class Player(
 
     fun addMoney(amount: Int) {
         money += amount
+        println(money)
+        println(money)
     }
 
     fun setHoleCards(hole1: Card, hole2: Card) {
