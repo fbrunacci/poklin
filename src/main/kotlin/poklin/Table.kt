@@ -34,7 +34,7 @@ class Table(val maxSeats: Int, var dealerSeat: Int, players: List<Player>) {
         }
     }
 
-    val players: Collection<Player?>
+    val players: Collection<Player>
         get() = playersMap.values
 
     fun addPlayer(p: Player) {
@@ -44,7 +44,7 @@ class Table(val maxSeats: Int, var dealerSeat: Int, players: List<Player>) {
         inGamePlayers.add(p)
     }
 
-    fun setPlayerOut(p: Player?) {
+    fun setPlayerOut(p: Player) {
         inGamePlayers.remove(p)
         activePlayers.remove(p)
     }
@@ -53,7 +53,7 @@ class Table(val maxSeats: Int, var dealerSeat: Int, players: List<Player>) {
         setPlayerOut(currentPlayer())
     }
 
-    fun nextPlayer(): Player? {
+    fun nextPlayer(): Player {
         if (currentPlayerSeat < 0) {
             currentPlayerSeat = dealerSeat
         }
@@ -62,11 +62,11 @@ class Table(val maxSeats: Int, var dealerSeat: Int, players: List<Player>) {
         while (!inGamePlayers.contains(playersMap[currentPlayerSeat]) || playersMap[currentPlayerSeat]!!.money == 0) {
             currentPlayerSeat = (currentPlayerSeat + 1) % maxSeats
         }
-        return playersMap[currentPlayerSeat]
+        return requireNotNull(playersMap[currentPlayerSeat])
     }
 
-    fun currentPlayer(): Player? {
-        return playersMap[currentPlayerSeat]
+    fun currentPlayer(): Player {
+        return requireNotNull(playersMap[currentPlayerSeat])
     }
 
     /**

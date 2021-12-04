@@ -2,7 +2,7 @@ package poklin
 
 import java.util.*
 
-abstract class GameProperties protected constructor(
+abstract class GameProperties(
     val numberOfHands: Int,
     val initialMoney: Int,
     val bigBlind: Int,

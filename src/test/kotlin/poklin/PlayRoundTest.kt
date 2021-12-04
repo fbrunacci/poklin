@@ -5,6 +5,7 @@ import com.google.inject.Singleton
 import dev.misfitlabs.kotlinguice4.KotlinModule
 import org.junit.Before
 import org.junit.Test
+import poklin.PlayRoundTest.TestGamePropertiesModule.TestGameProperties
 import poklin.controler.GameHandController
 import poklin.dependencyinjection.TexasModule
 import poklin.model.bet.BettingDecision
@@ -26,21 +27,21 @@ class PlayRoundTest {
             val player2Controller = PlayerControllerBettingDecisionFifo()
 
             init {
-                addPlayer(Player(1, 100, player1Controller))
-                addPlayer(Player(2, 100, player2Controller))
+                addPlayer(Player(1, 1000, player1Controller))
+                addPlayer(Player(2, 1000, player2Controller))
             }
         }
     }
 
     lateinit var gameHandController: GameHandController
-    lateinit var testGameProperties: TestGamePropertiesModule.TestGameProperties
+    lateinit var testGameProperties: TestGameProperties
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
         val injector = Guice.createInjector(TexasModule(), TestGamePropertiesModule())
         gameHandController = injector.getInstance(GameHandController::class.java)
-        testGameProperties = injector.getInstance(GameProperties::class.java) as TestGamePropertiesModule.TestGameProperties
+        testGameProperties = injector.getInstance(GameProperties::class.java) as TestGameProperties
     }
 
     @Test
@@ -99,80 +100,68 @@ class PlayRoundTest {
 
     @Test
     fun playGameS3() {
-        val players = LinkedList<Player>()
-        val player1Controller = PlayerControllerBettingDecisionFifo()
-        val player2Controller = PlayerControllerBettingDecisionFifo()
-        players.add(Player(1, 100, player1Controller))
-        players.add(Player(2, 100, player2Controller))
-        val gameHand = GameHand(players, 10, 20)
+        val gameHand = GameHand(testGameProperties.players, 10, 20)
+        with(testGameProperties) {
+            // preflop
+            player2Controller.pushDecision(RAISE_CUSTOM(50))
+            player1Controller.pushDecision(BettingDecision.CALL)
 
-        // preflop
-        player2Controller.pushDecision(RAISE_CUSTOM(50))
-        player1Controller.pushDecision(BettingDecision.CALL)
+            // post flop
+            player2Controller.pushDecision(BettingDecision.CHECK)
+            player1Controller.pushDecision(BettingDecision.CHECK)
 
-        // post flop
-        player2Controller.pushDecision(BettingDecision.CHECK)
-        player1Controller.pushDecision(BettingDecision.CHECK)
+            // post turn
+            player2Controller.pushDecision(BettingDecision.CHECK)
+            player1Controller.pushDecision(BettingDecision.CHECK)
 
-        // post turn
-        player2Controller.pushDecision(BettingDecision.CHECK)
-        player1Controller.pushDecision(BettingDecision.CHECK)
-
-        // post river
-        player2Controller.pushDecision(BettingDecision.CHECK)
-        player1Controller.pushDecision(BettingDecision.CHECK)
-        gameHandController.play(gameHand)
+            // post river
+            player2Controller.pushDecision(BettingDecision.CHECK)
+            player1Controller.pushDecision(BettingDecision.CHECK)
+            gameHandController.play(gameHand)
+        }
     }
 
     @Test
     fun playGameS4() {
-        val players = LinkedList<Player>()
-        val player1Controller = PlayerControllerBettingDecisionFifo()
-        val player2Controller = PlayerControllerBettingDecisionFifo()
-        players.add(Player(1, 100, player1Controller))
-        players.add(Player(2, 100, player2Controller))
-        val gameHand = GameHand(players, 10, 20)
+        val gameHand = GameHand(testGameProperties.players, 10, 20)
+        with(testGameProperties) {
+            // preflop
+            player2Controller.pushDecision(RAISE_CUSTOM(50))
+            player1Controller.pushDecision(BettingDecision.CALL)
 
-        // preflop
-        player2Controller.pushDecision(RAISE_CUSTOM(50))
-        player1Controller.pushDecision(BettingDecision.CALL)
+            // post flop
+            player2Controller.pushDecision(BettingDecision.CHECK)
+            player1Controller.pushDecision(BettingDecision.CHECK)
 
-        // post flop
-        player2Controller.pushDecision(BettingDecision.CHECK)
-        player1Controller.pushDecision(BettingDecision.CHECK)
+            // post turn
+            player2Controller.pushDecision(BettingDecision.CHECK)
+            player1Controller.pushDecision(BettingDecision.CHECK)
 
-        // post turn
-        player2Controller.pushDecision(BettingDecision.CHECK)
-        player1Controller.pushDecision(BettingDecision.CHECK)
-
-        // post river
-        player2Controller.pushDecision(BettingDecision.FOLD)
-        gameHandController.play(gameHand)
+            // post river
+            player2Controller.pushDecision(BettingDecision.FOLD)
+            gameHandController.play(gameHand)
+        }
     }
 
     @Test
     fun playGameSplitPot() {
-        val players = LinkedList<Player>()
-        val player1Controller = PlayerControllerBettingDecisionFifo()
-        val player2Controller = PlayerControllerBettingDecisionFifo()
-        players.add(Player(1, 100, player1Controller))
-        players.add(Player(2, 100, player2Controller))
-        val gameHand = GameHand(players, 10, 20)
+        val gameHand = GameHand(testGameProperties.players, 10, 20)
+        with(testGameProperties) {
+            // preflop
+            player2Controller.pushDecision(RAISE_CUSTOM(50))
+            player1Controller.pushDecision(BettingDecision.CALL)
 
-        // preflop
-        player2Controller.pushDecision(RAISE_CUSTOM(50))
-        player1Controller.pushDecision(BettingDecision.CALL)
+            // post flop
+            player2Controller.pushDecision(BettingDecision.CHECK)
+            player1Controller.pushDecision(BettingDecision.CHECK)
 
-        // post flop
-        player2Controller.pushDecision(BettingDecision.CHECK)
-        player1Controller.pushDecision(BettingDecision.CHECK)
+            // post turn
+            player2Controller.pushDecision(BettingDecision.CHECK)
+            player1Controller.pushDecision(BettingDecision.CHECK)
 
-        // post turn
-        player2Controller.pushDecision(BettingDecision.CHECK)
-        player1Controller.pushDecision(BettingDecision.CHECK)
-
-        // post river
-        player2Controller.pushDecision(BettingDecision.FOLD)
-        gameHandController.play(gameHand)
+            // post river
+            player2Controller.pushDecision(BettingDecision.FOLD)
+            gameHandController.play(gameHand)
+        }
     }
 }

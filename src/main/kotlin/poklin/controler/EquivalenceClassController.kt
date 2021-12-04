@@ -4,20 +4,7 @@ import com.google.inject.Inject
 import poklin.model.cards.*
 
 class EquivalenceClassController @Inject constructor() {
-    val equivalenceClasses: MutableCollection<EquivalenceClass>
-
-    /**
-     * Converts two cards into their corrispondent equivalence class
-     */
-    fun cards2Equivalence(card1: Card, card2: Card): EquivalenceClass {
-        val equivalenceClass: EquivalenceClass
-        equivalenceClass = if (card1.suit == card2.suit) { // suited
-            EquivalenceClassSuited(card1.number, card2.number)
-        } else { // unsuited
-            EquivalenceClassUnsuited(card1.number, card2.number)
-        }
-        return equivalenceClass
-    }
+    val equivalenceClasses: MutableCollection<EquivalenceClass> = ArrayList()
 
     fun generateAllEquivalenceClass() {
         var equivalenceClass: EquivalenceClass
@@ -39,9 +26,5 @@ class EquivalenceClassController @Inject constructor() {
                 equivalenceClasses.add(equivalenceClass)
             }
         }
-    }
-
-    init {
-        equivalenceClasses = ArrayList()
     }
 }

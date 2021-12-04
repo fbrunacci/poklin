@@ -1,20 +1,17 @@
-package poklin.dependencyinjection.preflopsim
+package poklin.controler.phase1
 
 import poklin.GameHand
-import poklin.HandPowerRanker
 import poklin.Player
+import poklin.HandPowerRanker
 import poklin.dependencyinjection.PlayerControllerPrePost
 import poklin.model.HandPowerType
 import poklin.model.bet.BettingDecision
 import poklin.model.cards.Card
+import javax.inject.Inject
 
-/**
- * A naive player that cannot fold but only bet. Used during pre flop rollout
- * simulations
- */
-class PlayerControllerPreFlopRoll : PlayerControllerPrePost() {
+class PlayerControllerPhaseINormal : PlayerControllerPrePost() {
     override fun toString(): String {
-        return "Preflop"
+        return "PhaseI normal"
     }
 
     public override fun decidePreFlop(
@@ -30,7 +27,7 @@ class PlayerControllerPreFlopRoll : PlayerControllerPrePost() {
         ) {
             BettingDecision.CALL
         } else {
-            BettingDecision.CALL
+            BettingDecision.FOLD
         }
     }
 
@@ -40,8 +37,8 @@ class PlayerControllerPreFlopRoll : PlayerControllerPrePost() {
         return if (handPowerType == HandPowerType.HIGH_CARD) {
             if (canCheck(gameHand!!, player)) {
                 BettingDecision.CALL
-            } else BettingDecision.CALL
-        } else if (handPowerType.power >= HandPowerType.THREE_OF_A_KIND.power) {
+            } else BettingDecision.FOLD
+        } else if (handPowerType.power >= HandPowerType.STRAIGHT.power) {
             BettingDecision.RAISE_MIN
         } else {
             BettingDecision.CALL

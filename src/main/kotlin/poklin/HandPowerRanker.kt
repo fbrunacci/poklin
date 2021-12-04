@@ -1,4 +1,4 @@
-package poklin.dependencyinjection
+package poklin
 
 import poklin.model.HandPower
 import poklin.model.HandPowerType
@@ -8,7 +8,7 @@ import poklin.model.cards.CardSuit
 import poklin.utils.MapList
 import java.util.*
 
-class HandPowerRanker {
+object HandPowerRanker {
     private val cardNumberComparator: Comparator<CardNumber?> =
         Comparator { cardNumber1, cardNumber2 -> cardNumber1!!.power - cardNumber2!!.power }
 

@@ -8,21 +8,19 @@ import poklin.controler.GameHandController
 import poklin.controler.HandStrengthEvaluator
 import poklin.controler.OpponentModeler
 import poklin.controler.StatisticsController
-import poklin.dependencyinjection.HandPowerRanker
+import poklin.HandPowerRanker
 import poklin.model.bet.BettingRoundName
 import poklin.model.cards.EquivalenceClass
 import poklin.utils.ILogger
 
 class GameHandControllerPreFlopRoll @Inject constructor(
     logger: ILogger,
-    handPowerRanker: HandPowerRanker,
     val gameProperties: GameProperties,
     statisticsController: StatisticsController,
     handStrengthEvaluator: HandStrengthEvaluator,
     opponentModeler: OpponentModeler
 ) : GameHandController(
     logger,
-    handPowerRanker,
     gameProperties,
     statisticsController,
     handStrengthEvaluator,

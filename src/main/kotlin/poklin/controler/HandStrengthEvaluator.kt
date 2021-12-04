@@ -1,11 +1,11 @@
 package poklin.controler
 
-import poklin.dependencyinjection.HandPowerRanker
+import poklin.HandPowerRanker
 import poklin.model.cards.Card
 import poklin.model.cards.Deck
 import javax.inject.Inject
 
-class HandStrengthEvaluator @Inject constructor(private val handPowerRanker: HandPowerRanker) {
+class HandStrengthEvaluator {
     fun evaluate(playerHoleCards: List<Card>?, sharedCards: List<Card>?, numberOfPlayers: Int): Double {
         if (sharedCards == null || sharedCards.isEmpty()) {
             return 0.0
@@ -25,12 +25,12 @@ class HandStrengthEvaluator @Inject constructor(private val handPowerRanker: Han
         val playerCards: MutableList<Card> = ArrayList()
         playerCards.addAll(playerHoleCards)
         playerCards.addAll(sharedCards)
-        val playerRank = handPowerRanker.rank(playerCards)
+        val playerRank = HandPowerRanker.rank(playerCards)
         for (couple in couplesOfCards) {
             val opponentCards: MutableList<Card> = ArrayList()
             opponentCards.addAll(couple)
             opponentCards.addAll(sharedCards)
-            val opponentRank = handPowerRanker.rank(opponentCards)
+            val opponentRank = HandPowerRanker.rank(opponentCards)
             val result = playerRank.compareTo(opponentRank)
             if (result > 0) {
                 wins++

@@ -1,12 +1,9 @@
 package poklin
 
-import com.google.inject.Guice
-import com.google.inject.Injector
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import poklin.dependencyinjection.HandPowerRanker
-import poklin.dependencyinjection.TexasModule
+import poklin.HandPowerRanker
 import poklin.dependencyinjection.preflopsim.PlayerControllerPreFlopRoll
 import poklin.model.bet.BettingDecision.BettingAction.RAISE
 import java.lang.Exception
@@ -25,7 +22,7 @@ class BettingRoundTest {
 //        playerController = injector
 //            .getInstance(PlayerControllerPreFlopRoll::class.java)
         players.clear()
-        val preFlopRollController = PlayerControllerPreFlopRoll(HandPowerRanker())
+        val preFlopRollController = PlayerControllerPreFlopRoll()
         players.add(Player(1, 100, preFlopRollController))
         players.add(Player(2, 100, preFlopRollController))
     }

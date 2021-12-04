@@ -4,7 +4,7 @@ import poklin.Game
 import poklin.GameHand
 import poklin.GameProperties
 import poklin.Player
-import poklin.dependencyinjection.HandPowerRanker
+import poklin.HandPowerRanker
 import poklin.model.HandPower
 import poklin.model.bet.BettingDecision
 import poklin.model.bet.BettingRoundName
@@ -15,7 +15,6 @@ import javax.inject.Inject
 
 open class GameHandController @Inject constructor(
     protected val logger: ILogger,
-    private val handPowerRanker: HandPowerRanker,
     private val gameProperties: GameProperties,
     private val statisticsController: StatisticsController,
     private val handStrengthEvaluator: HandStrengthEvaluator,
@@ -26,7 +25,7 @@ open class GameHandController @Inject constructor(
         logger.logImportant("Game Hand #" + (game.gameHandsCount() + 1))
         logger.log("-----------------------------------------")
         val gameHand = createGameHand(game)
-        val iterator: Iterator<Player?> = gameHand.table.players.iterator()
+        val iterator: Iterator<Player> = gameHand.table.players.iterator()
         while (iterator.hasNext()) {
             val player = iterator.next()
             logger.log(player.toString())
@@ -133,7 +132,7 @@ open class GameHandController @Inject constructor(
         for (player in activePlayers) {
             val mergeCards: MutableList<Card> = ArrayList(player.holeCards)
             mergeCards.addAll(sharedCards)
-            val handPower = handPowerRanker.rank(mergeCards).value
+            val handPower = HandPowerRanker.rank(mergeCards).value
             if (!winners.containsKey(handPower)) {
                 winners[handPower] = ArrayList()
             }
@@ -155,7 +154,7 @@ open class GameHandController @Inject constructor(
         for (player in activePlayers) {
             val mergeCards: MutableList<Card> = ArrayList(player.holeCards)
             mergeCards.addAll(sharedCards)
-            val handPower = handPowerRanker.rank(mergeCards)
+            val handPower = HandPowerRanker.rank(mergeCards)
             logger.log("$player: $handPower")
             if (bestHandPower == null || handPower.compareTo(bestHandPower) > 0) {
                 winners.clear()
