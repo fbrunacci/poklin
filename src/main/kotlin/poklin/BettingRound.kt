@@ -2,7 +2,7 @@ package poklin
 
 import poklin.model.bet.BettingDecision
 import poklin.model.bet.BettingDecision.BettingAction
-import poklin.model.bet.BettingDecision.BettingAction.NONE
+import poklin.model.bet.BettingDecision.BettingAction.*
 import poklin.model.bet.BettingDecision.RaiseAmount
 import poklin.model.bet.BettingRoundName
 import poklin.opponentmodeling.ContextAction
@@ -25,12 +25,12 @@ class BettingRound(private val gameHand: GameHand) {
         // Logger.get().log("Player #"+player.getNumber()+" bettingDecision:"+bettingDecision );
         val playerBet = getPlayerBet(player)
         when (bettingDecision.bettingAction) {
-            BettingAction.CHECK -> getPlayerBet(player)!!.action = BettingAction.CHECK
-            BettingAction.FOLD -> getPlayerBet(player)!!.action = BettingAction.FOLD
+            BettingAction.CHECK -> getPlayerBet(player).action = BettingAction.CHECK
+            BettingAction.FOLD -> getPlayerBet(player).action = BettingAction.FOLD
             BettingAction.CALL -> placeBet(
                 player,
                 bettingDecision.bettingAction,
-                Math.min(highestBet - playerBet!!.amount, player.money)
+                Math.min(highestBet - playerBet.amount, player.money)
             )
             BettingAction.RAISE -> when (bettingDecision.raiseAmount) {
                 RaiseAmount.RAISE_MIN -> placeBet(
@@ -55,8 +55,8 @@ class BettingRound(private val gameHand: GameHand) {
         }
     }
 
-    protected fun getPlayerBet(player: Player): Bet? {
-        return playersBet[player]
+    protected fun getPlayerBet(player: Player): Bet {
+        return requireNotNull(playersBet[player])
     }
 
     protected fun hasPlayerBet(player: Player): Boolean {
@@ -82,13 +82,13 @@ class BettingRound(private val gameHand: GameHand) {
         if (bet + previousBetAmount > highestBet) {
             highestBet = bet + previousBetAmount
         } else require(!(bet + previousBetAmount < highestBet && player.money != 0)) { "You can't bet less than the higher bet (bet:" + bet + " highestBet:" + highestBet + ") player:" + player + " money:" + player.money }
-        getPlayerBet(player)!!.amount = bet + previousBetAmount
-        getPlayerBet(player)!!.action = action
+        getPlayerBet(player).amount = bet + previousBetAmount
+        getPlayerBet(player).action = action
     }
 
     fun getBetForPlayer(player: Player): Int {
         return if (hasPlayerBet(player)) {
-            getPlayerBet(player)!!.amount
+            getPlayerBet(player).amount
         } else 0
     }
 
@@ -145,7 +145,7 @@ class BettingRound(private val gameHand: GameHand) {
 
         // chaque joueur doit avoir pris au moins une decision
         for (bet in playersBet.values) {
-            if (bet.action == NONE) {
+            if (bet.action == NONE || bet.action == SMALLBLIND || bet.action == BIGBLIND) {
                 return true
             }
         }

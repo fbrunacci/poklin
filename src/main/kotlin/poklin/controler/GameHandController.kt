@@ -17,8 +17,7 @@ open class GameHandController @Inject constructor(
     protected val logger: ILogger,
     private val gameProperties: GameProperties,
     private val statisticsController: StatisticsController,
-    private val handStrengthEvaluator: HandStrengthEvaluator,
-    private val opponentModeler: OpponentModeler
+    private val handStrengthEvaluator: HandStrengthEvaluator
 ) {
     fun play(game: Game) {
         logger.log("-----------------------------------------")
@@ -66,10 +65,10 @@ open class GameHandController @Inject constructor(
         if (gameHand.bettingRoundName == BettingRoundName.PRE_FLOP) {
             takeBlinds(gameHand)
         }
-        val numberOfPlayersAtBeginningOfRound = gameHand.table.getActivePlayers().size
+
         while (currentBettingRound.playerCanBet()) {
             val player = gameHand.table.nextPlayer()
-            val bettingDecision = player!!.decide(gameHand)
+            val bettingDecision = player.decide(gameHand)
             applyDecision(gameHand, player, bettingDecision)
         }
 
@@ -101,8 +100,8 @@ open class GameHandController @Inject constructor(
         logger.log("$smallBlindPlayer: Small blind $smallBlind")
         logger.log("$bigBlindPlayer: Big blind $bigBlind")
         // TODO ALL IN ...
-        gameHand.currentBettingRound.placeBet(smallBlindPlayer, BettingDecision.BettingAction.RAISE, smallBlind)
-        gameHand.currentBettingRound.placeBet(bigBlindPlayer, BettingDecision.BettingAction.RAISE, bigBlind)
+        gameHand.currentBettingRound.placeBet(smallBlindPlayer, BettingDecision.BettingAction.SMALLBLIND, smallBlind)
+        gameHand.currentBettingRound.placeBet(bigBlindPlayer, BettingDecision.BettingAction.BIGBLIND, bigBlind)
     }
 
     private fun applyDecision(gameHand: GameHand, player: Player?, bettingDecision: BettingDecision) {

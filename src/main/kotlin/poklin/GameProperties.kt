@@ -4,7 +4,6 @@ import java.util.*
 
 abstract class GameProperties(
     val numberOfHands: Int,
-    val initialMoney: Int,
     val bigBlind: Int,
     val smallBlind: Int
 ) {

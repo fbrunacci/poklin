@@ -10,10 +10,8 @@ import poklin.controler.GameHandController
 import poklin.dependencyinjection.TexasModule
 import poklin.model.bet.BettingDecision
 import poklin.model.bet.BettingDecision.Companion.RAISE_CUSTOM
-import poklin.persistence.PersistenceModule
 import poklin.utils.ConsoleLogger
 import poklin.utils.ILogger
-import java.util.*
 
 class PlayRoundTest {
 
@@ -22,7 +20,8 @@ class PlayRoundTest {
             bind<GameProperties>().to<TestGameProperties>().`in`<Singleton>()
             bind<ILogger>().to<ConsoleLogger>().`in`<Singleton>()
         }
-        class TestGameProperties : GameProperties(15, 1000, 20, 10) {
+
+        class TestGameProperties : GameProperties(15, 20, 10) {
             val player1Controller = PlayerControllerBettingDecisionFifo()
             val player2Controller = PlayerControllerBettingDecisionFifo()
 

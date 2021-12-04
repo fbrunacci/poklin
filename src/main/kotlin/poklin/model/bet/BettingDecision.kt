@@ -3,7 +3,7 @@ package poklin.model.bet
 class BettingDecision(val bettingAction: BettingAction, var raiseAmount: RaiseAmount? = null, var amount: Int? = null) {
 
     enum class BettingAction {
-        NONE,
+        NONE, SMALLBLIND, BIGBLIND,
         CHECK, CALL, FOLD, RAISE
     }
 

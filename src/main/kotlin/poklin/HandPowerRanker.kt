@@ -5,7 +5,6 @@ import poklin.model.HandPowerType
 import poklin.model.cards.Card
 import poklin.model.cards.CardNumber
 import poklin.model.cards.CardSuit
-import poklin.utils.MapList
 import java.util.*
 
 object HandPowerRanker {
@@ -104,9 +103,9 @@ object HandPowerRanker {
         )
     }
 
-    private fun getFullHouse(numberGroup: MapList<CardNumber, Card>): List<CardNumber?> {
-        val fullHouseCardNumbers: MutableList<CardNumber?> = ArrayList()
-        val cardNumbers: List<CardNumber?> = ArrayList(
+    private fun getFullHouse(numberGroup: CardsGroup<CardNumber, Card>): List<CardNumber> {
+        val fullHouseCardNumbers: MutableList<CardNumber> = ArrayList()
+        val cardNumbers: List<CardNumber> = ArrayList(
             numberGroup.keySet()
         )
         Collections.sort(cardNumbers, cardNumberComparator)
@@ -152,7 +151,7 @@ object HandPowerRanker {
         return null
     }
 
-    private fun getPairs(numberGroup: MapList<CardNumber, Card>): List<CardNumber?> {
+    private fun getPairs(numberGroup: CardsGroup<CardNumber, Card>): List<CardNumber?> {
         val pairsCardNumber: MutableList<CardNumber?> = ArrayList()
         for (cards in numberGroup) {
             if (cards.size == 2) {
@@ -169,7 +168,7 @@ object HandPowerRanker {
 
     private fun calculateFlushTie(
         flushSuit: CardSuit,
-        suitGroup: MapList<CardSuit, Card>
+        suitGroup: CardsGroup<CardSuit, Card>
     ): List<CardNumber?> {
         val cards = suitGroup[flushSuit]
         return bestCardsNumberInList(cards)
@@ -207,7 +206,7 @@ object HandPowerRanker {
 
     private fun getCardNumberForCount(
         count: Int,
-        numberGroup: MapList<CardNumber, Card>
+        numberGroup: CardsGroup<CardNumber, Card>
     ): CardNumber? {
         for (entry in numberGroup.entrySet()) {
             if (entry.value.size == count) {
@@ -217,14 +216,14 @@ object HandPowerRanker {
         return null
     }
 
-    private fun getStraight(numberGroup: MapList<CardNumber, Card>): CardNumber? {
+    private fun getStraight(numberGroup: CardsGroup<CardNumber, Card>): CardNumber? {
         val cardNumbers: List<CardNumber?> = ArrayList(
             numberGroup.keySet()
         )
         return getStraightNumber(cardNumbers)
     }
 
-    private fun getStraightFlushNumber(suitGroup: MapList<CardSuit, Card>): CardNumber? {
+    private fun getStraightFlushNumber(suitGroup: CardsGroup<CardSuit, Card>): CardNumber? {
         val flushSuit = getFlush(suitGroup) ?: return null
         val cards = suitGroup[flushSuit]
         val cardNumbers = cardsToCardNumber(cards)
@@ -258,7 +257,7 @@ object HandPowerRanker {
         return straightNumber
     }
 
-    private fun getFlush(suitGroup: MapList<CardSuit, Card>): CardSuit? {
+    private fun getFlush(suitGroup: CardsGroup<CardSuit, Card>): CardSuit? {
         for (cards in suitGroup) {
             if (cards.size >= 5) {
                 return cards[0].suit
@@ -267,19 +266,48 @@ object HandPowerRanker {
         return null
     }
 
-    private fun getNumberGroup(cards: List<Card>?): MapList<CardNumber, Card> {
-        val numberGroup = MapList<CardNumber, Card>()
+    private fun getNumberGroup(cards: List<Card>?): CardsGroup<CardNumber, Card> {
+        val numberGroup = CardsGroup<CardNumber, Card>()
         for (card in cards!!) {
             numberGroup.add(card.number, card)
         }
         return numberGroup
     }
 
-    private fun getSuitGroup(cards: List<Card>?): MapList<CardSuit, Card> {
-        val suitGroup = MapList<CardSuit, Card>()
+    private fun getSuitGroup(cards: List<Card>?): CardsGroup<CardSuit, Card> {
+        val suitGroup = CardsGroup<CardSuit, Card>()
         for (card in cards!!) {
             suitGroup.add(card.suit, card)
         }
         return suitGroup
+    }
+}
+
+class CardsGroup<K, Card> : Iterable<List<Card>?> {
+    private val mapList: MutableMap<K, MutableList<Card>> = HashMap()
+    override fun iterator(): MutableIterator<List<Card>> {
+        return mapList.values.iterator()
+    }
+
+    fun add(key: K, value: Card): Card {
+        var values = mapList[key]
+        if (values == null) {
+            values = ArrayList()
+            mapList[key] = values
+        }
+        values.add(value)
+        return value
+    }
+
+    fun keySet(): Set<K> {
+        return mapList.keys
+    }
+
+    fun entrySet(): Set<Map.Entry<K, List<Card>>> {
+        return mapList.entries
+    }
+
+    operator fun get(key: K): List<Card> {
+        return mapList[key]!!
     }
 }

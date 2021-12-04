@@ -1,15 +1,14 @@
-package poklin.controler.phase1
+package poklin.controler.player
 
 import poklin.GameHand
 import poklin.Player
 import poklin.HandPowerRanker
-import poklin.dependencyinjection.PlayerControllerPrePost
+import poklin.dependencyinjection.AbstractPlayerController
 import poklin.model.HandPowerType
 import poklin.model.bet.BettingDecision
 import poklin.model.cards.Card
-import javax.inject.Inject
 
-class PlayerControllerNormal : PlayerControllerPrePost() {
+class PlayerControllerNormal : AbstractPlayerController() {
     override fun toString(): String {
         return "normal"
     }
