@@ -1,5 +1,7 @@
 package poklin.model.cards
 
+import poklin.model.cards.CardNumber.ACE
+import poklin.model.cards.CardSuit.DIAMOND
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -23,11 +25,11 @@ internal class DeckTest {
     @Test
     fun testDeckFifo() {
         val deck = DeckFifo()
-        val clubAs = Card(CardSuit.fromString("c"), CardNumber.fromSymbol("A"))
-        val diamondAs = Card(CardSuit.DIAMOND, CardNumber.ACE)
-        deck.pushCardToTop(diamondAs)
-        deck.pushCardToTop(clubAs)
-        assertEquals(diamondAs, deck.removeTopCard())
-        assertEquals(clubAs, deck.removeTopCard())
+        val clubAce = Card(CardSuit.fromString("c"), CardNumber.fromSymbol("A"))
+        val diamondAce = Card(DIAMOND, ACE)
+        deck.pushCardToTop(diamondAce)
+        deck.pushCardToTop(clubAce)
+        assertEquals(diamondAce, deck.removeTopCard())
+        assertEquals(clubAce, deck.removeTopCard())
     }
 }
