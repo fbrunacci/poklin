@@ -5,11 +5,16 @@ import poklin.model.HandPowerType
 import poklin.model.cards.Card
 import poklin.model.cards.CardNumber
 import poklin.model.cards.CardSuit
+import poklin.model.cards.Cards
 import java.util.*
 
 object HandPowerRanker {
     private val cardNumberComparator: Comparator<CardNumber?> =
         Comparator { cardNumber1, cardNumber2 -> cardNumber1!!.power - cardNumber2!!.power }
+
+    fun rank(cards: String): HandPower {
+        return rank(Cards.fromText(cards))
+    }
 
     fun rank(cards: List<Card>): HandPower {
         val numberGroup = getNumberGroup(cards)

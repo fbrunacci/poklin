@@ -2,13 +2,14 @@ package poklin
 
 import java.util.*
 
-abstract class GameProperties(
+open class GameProperties(
     val numberOfHands: Int,
     val bigBlind: Int,
     val smallBlind: Int
 ) {
     val players = LinkedList<Player>()
-    protected fun addPlayer(player: Player) {
+
+    fun addPlayer(player: Player) {
         players.add(player)
     }
 

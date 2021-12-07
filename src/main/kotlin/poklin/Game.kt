@@ -2,17 +2,8 @@ package poklin
 
 import java.util.*
 
-class Game {
-    val players: LinkedList<Player>
+class Game(val players: LinkedList<Player>) {
     private val gameHands: MutableList<GameHand> = ArrayList()
-
-    constructor() {
-        players = LinkedList()
-    }
-
-    constructor(players: LinkedList<Player>?) {
-        this.players = LinkedList(players)
-    }
 
     fun setNextDealer() {
         val formerDealer = players.removeAt(0)

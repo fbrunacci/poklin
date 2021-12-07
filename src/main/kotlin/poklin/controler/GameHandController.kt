@@ -1,46 +1,46 @@
 package poklin.controler
 
-import poklin.Game
-import poklin.GameHand
-import poklin.GameProperties
-import poklin.Player
-import poklin.HandPowerRanker
+import poklin.*
 import poklin.model.HandPower
 import poklin.model.bet.BettingDecision
 import poklin.model.bet.BettingRoundName
 import poklin.model.cards.Card
 import poklin.model.cards.Deck
 import poklin.utils.ILogger
+import java.util.*
 import javax.inject.Inject
 
 open class GameHandController @Inject constructor(
-    protected val logger: ILogger,
+    private val logger: ILogger,
     private val gameProperties: GameProperties,
     private val statisticsController: StatisticsController,
-    private val handStrengthEvaluator: HandStrengthEvaluator
+    private val handStrengthEvaluator: HandStrengthEvaluator,
 ) {
     fun play(game: Game) {
+        val gameHand = createGameHand(game)
+        logGameHand(game, gameHand)
+        play(gameHand)
+    }
+
+    fun play(gameHand: GameHand) {
+        while (gameHand.table.getActivePlayers().size > 1
+            && gameHand.bettingRoundName != BettingRoundName.POST_RIVER
+        ) {
+            playRound(gameHand)
+        }
+        showDown(gameHand)
+    }
+
+    private fun logGameHand(game: Game, gameHand: GameHand) {
         logger.log("-----------------------------------------")
         logger.logImportant("Game Hand #" + (game.gameHandsCount() + 1))
         logger.log("-----------------------------------------")
-        val gameHand = createGameHand(game)
         val iterator: Iterator<Player> = gameHand.table.players.iterator()
         while (iterator.hasNext()) {
             val player = iterator.next()
             logger.log(player.toString())
         }
         logger.log("-----------------------------------------")
-        play(gameHand)
-    }
-
-    fun play(gameHand: GameHand) {
-        var haveWinner = false
-        while (gameHand.bettingRoundName != BettingRoundName.POST_RIVER
-            && !haveWinner
-        ) {
-            haveWinner = playRound(gameHand)
-        }
-        showDown(gameHand)
     }
 
     private fun createGameHand(game: Game): GameHand {
@@ -49,7 +49,7 @@ open class GameHandController @Inject constructor(
             gameProperties.smallBlind,
             gameProperties.bigBlind,
             Deck()
-        ) // TODO adapt samll/big Blind
+        )
         game.addGameHand(gameHand)
         return gameHand
     }
@@ -58,7 +58,7 @@ open class GameHandController @Inject constructor(
      * @param gameHand
      * @return true if we have a winner
      */
-    fun playRound(gameHand: GameHand): Boolean {
+    fun playRound(gameHand: GameHand) {
         gameHand.nextRound()
         val currentBettingRound = gameHand.currentBettingRound
         logBettingRound(gameHand)
@@ -71,14 +71,6 @@ open class GameHandController @Inject constructor(
             val bettingDecision = player.decide(gameHand)
             applyDecision(gameHand, player, bettingDecision)
         }
-
-        //logger.log("Pots: "+gameHand.getPots().toString());
-
-        // Check if we have only one player left
-        if (gameHand.table.getActivePlayers().size == 1) {
-            return true // => the round is over
-        }
-        return false
     }
 
     private fun logBettingRound(gameHand: GameHand) {
@@ -118,10 +110,10 @@ open class GameHandController @Inject constructor(
         DD++
     }
 
-    private fun getWinnersByHandPower(gameHand: GameHand): Map<Int?, List<Player>> {
+    private fun getWinnersByHandPower(gameHand: GameHand): Map<Int, List<Player>> {
         val activePlayers: List<Player> = gameHand.table.getActivePlayers()
-        val winners: MutableMap<Int?, MutableList<Player>> = HashMap()
-        if ( activePlayers.size == 1 ) {
+        val winners: MutableMap<Int, MutableList<Player>> = HashMap()
+        if (activePlayers.size == 1) {
             val winner = activePlayers.first()
             return mapOf(winner.seat to listOf(winner))
         }
@@ -129,17 +121,16 @@ open class GameHandController @Inject constructor(
         for (player in activePlayers) {
             val mergeCards: MutableList<Card> = ArrayList(player.holeCards)
             mergeCards.addAll(sharedCards)
-            val handPower = HandPowerRanker.rank(mergeCards).value
-            if (!winners.containsKey(handPower)) {
-                winners[handPower] = ArrayList()
+            val handPower = HandPowerRanker.rank(mergeCards)
+            logger.log("$player $handPower")
+            val handPowerValue = handPower.value
+            if (!winners.containsKey(handPowerValue)) {
+                winners[handPowerValue] = ArrayList()
             }
-            winners[handPower]!!.add(player)
+            winners[handPowerValue]!!.add(player)
         }
-        val sortedWinners = LinkedHashMap<Int?, List<Player>>()
-        winners.entries
-            .stream()
-            .sorted(java.util.Map.Entry.comparingByKey<Int, List<Player>>())
-            .forEachOrdered { (key, value): Map.Entry<Int?, List<Player>> -> sortedWinners[key] = value }
+        val sortedWinners = TreeMap<Int, List<Player>>(Collections.reverseOrder())
+        sortedWinners.putAll(winners)
         return sortedWinners
     }
 

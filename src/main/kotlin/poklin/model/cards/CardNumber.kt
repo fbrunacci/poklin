@@ -2,7 +2,7 @@ package poklin.model.cards
 
 import java.io.Serializable
 
-enum class CardNumber(private val symbol: String, val power: Int) : Serializable {
+enum class CardNumber(val symbol: String, val power: Int) : Serializable {
     TWO("2", 2),
     THREE("3", 3),
     FOUR("4", 4),
@@ -22,7 +22,7 @@ enum class CardNumber(private val symbol: String, val power: Int) : Serializable
     }
 
     companion object {
-        fun fromSymbol(symbol: String): CardNumber {
+        fun fromText(symbol: String): CardNumber {
             return CardNumber.values().first { it.symbol == symbol }
         }
     }

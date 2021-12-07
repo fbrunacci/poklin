@@ -34,6 +34,6 @@ class HandPower(
 
     override fun toString(): String {
         return (handPowerType.toString() + " "
-                + tieBreakingInformation.toString())
+                + tieBreakingInformation.toString() + " (v:"+value+")")
     }
 }

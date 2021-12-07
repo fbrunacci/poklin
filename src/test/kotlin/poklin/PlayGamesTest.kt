@@ -6,7 +6,6 @@ import com.google.inject.Singleton
 import dev.misfitlabs.kotlinguice4.KotlinModule
 import org.junit.Before
 import org.junit.Test
-import poklin.PlayGamesTest.TestGamePropertiesModule.TestGameProperties
 import poklin.controler.GameHandController
 import poklin.controler.PokerController
 import poklin.controler.player.PlayerControllerBluff
@@ -16,45 +15,39 @@ import poklin.utils.ConsoleLogger
 import poklin.utils.ILogger
 
 class PlayGamesTest {
-    class TestGamePropertiesModule : KotlinModule() {
-        override fun configure() {
-            bind<GameProperties>().to<TestGameProperties>().`in`<Singleton>()
-            bind<ILogger>().to<ConsoleLogger>().`in`<Singleton>()
-        }
-
-        class TestGameProperties : GameProperties(15, 20, 10) {
-            init {
-                addPlayer(Player(1, 1000, PlayerControllerBluff()))
-                addPlayer(Player(2, 1000, PlayerControllerBluff()))
-                addPlayer(Player(3, 1000, PlayerControllerNormal()))
-                addPlayer(Player(4, 1000, PlayerControllerNormal()))
-                addPlayer(Player(5, 1000, PlayerControllerNormal()))
-            }
-        }
-    }
 
     lateinit var injector: Injector
-    lateinit var gameHandController: GameHandController
-    lateinit var testGameProperties: TestGameProperties
+    lateinit var gameProperties: GameProperties
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        injector = Guice.createInjector(TexasModule(), TestGamePropertiesModule())
-        gameHandController = injector.getInstance(GameHandController::class.java)
-        testGameProperties = injector.getInstance(GameProperties::class.java) as TestGameProperties
+        gameProperties = GameProperties(15, 20, 10)
+        with(gameProperties) {
+            addPlayer(Player(1, 1000, PlayerControllerBluff()))
+            addPlayer(Player(2, 1000, PlayerControllerBluff()))
+            addPlayer(Player(3, 1000, PlayerControllerNormal()))
+            addPlayer(Player(4, 1000, PlayerControllerNormal()))
+            addPlayer(Player(5, 1000, PlayerControllerNormal()))
+        }
+        injector = Guice.createInjector(TexasModule(), object : KotlinModule() {
+            override fun configure() {
+                bind<ILogger>().to<ConsoleLogger>().`in`<Singleton>()
+                bind<GameProperties>().toInstance(gameProperties)
+            }}
+        )
     }
 
     @Test
-    fun play100Round() {
+    fun play10Round() {
         GameHandController.DD = 0
-        for (i in 1..100) {
+        for (i in 1..10) {
             val pokerController = injector.getInstance(PokerController::class.java)
             pokerController.play()
 
-            val playerWithMoney = testGameProperties.players.filter { player -> player.money > 0 }
+            val playerWithMoney = gameProperties.players.filter { player -> player.money > 0 }
             if (playerWithMoney.size == 1) {
-                testGameProperties.players.forEach { player -> player.money = 1000 }
+                gameProperties.players.forEach { player -> player.money = 1000 }
             }
         }
     }

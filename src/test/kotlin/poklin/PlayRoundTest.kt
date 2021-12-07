@@ -10,6 +10,8 @@ import poklin.controler.GameHandController
 import poklin.dependencyinjection.TexasModule
 import poklin.model.bet.BettingDecision
 import poklin.model.bet.BettingDecision.Companion.RAISE_CUSTOM
+import poklin.model.cards.Cards
+import poklin.model.cards.DeckFifo
 import poklin.utils.ConsoleLogger
 import poklin.utils.ILogger
 
@@ -119,7 +121,11 @@ class PlayRoundTest {
 
     @Test
     fun playGameS3() {
-        val gameHand = GameHand(testGameProperties.players, 10, 20)
+        val deckFifo = DeckFifo()
+        val gameHand = GameHand(testGameProperties.players, 10, 20, deckFifo)
+        Cards.fromText("As Ks Qs Js 10s 9s 8s 7s 6s 5s 4s 3s 2s")
+            .forEach { card -> deckFifo.pushCardToTop(card) }
+
         with(testGameProperties) {
             // preflop
             player2Controller.pushDecision(RAISE_CUSTOM(50))
@@ -137,6 +143,10 @@ class PlayRoundTest {
             player2Controller.pushDecision(BettingDecision.CHECK)
             player1Controller.pushDecision(BettingDecision.CHECK)
             gameHandController.play(gameHand)
+
+            println("=====================")
+            println(player1)
+            println(player2)
         }
     }
 

@@ -10,20 +10,13 @@ import poklin.opponentmodeling.ContextAction
 import poklin.opponentmodeling.ContextInformation
 import java.util.*
 
-open class GameHand @JvmOverloads constructor(
-    players: LinkedList<Player>,
-    smallBlind: Int,
-    bigBlind: Int,
-    deck: IDeck = Deck()
-) {
-    lateinit var table: Table
-    protected val deck: IDeck
+open class GameHand(val players: LinkedList<Player>, val smallBlind: Int, val bigBlind: Int, val deck: IDeck = Deck()) {
+
+    val table = Table(6, players)
     val sharedCards: MutableList<Card> = ArrayList()
     private val bettingRounds: MutableList<BettingRound> = ArrayList()
-    private val pots: MutableList<Pot>
-    private val hasRemoved = true
-    val smallBlind: Int
-    val bigBlind: Int
+    private val pots: MutableList<Pot> = ArrayList()
+
     fun nextRound(): BettingRound {
         table.newRound()
         val bettingRound = BettingRound(this)
@@ -36,16 +29,6 @@ open class GameHand @JvmOverloads constructor(
             dealSharedCard()
         }
         return bettingRound
-    }
-
-    init {
-        table = Table(6, players)
-        //r        this.players = new LinkedList<Player>(players);
-//r        this.activePlayers = new LinkedList<Player>(players);
-        this.smallBlind = smallBlind
-        this.bigBlind = bigBlind
-        this.deck = deck
-        pots = ArrayList()
     }
 
     val totalBets: Int
@@ -66,11 +49,6 @@ open class GameHand @JvmOverloads constructor(
         return bettingRounds
     }
 
-    //    public void removeCurrentPlayer() {
-    //        activePlayers.remove(players.getFirst());
-    //        players.removeFirst();
-    //        hasRemoved = true;
-    //    }
     protected open fun dealHoleCards() {
         for (player in table.getInGamePlayers()) {
             val hole1 = deck.removeTopCard()

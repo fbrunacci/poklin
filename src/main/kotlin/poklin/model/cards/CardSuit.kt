@@ -1,14 +1,17 @@
 package poklin.model.cards
 
-enum class CardSuit(private val symbol: String) {
-    SPADE("\u2660"), HEART("\u2665"), CLUB("\u2663"), DIAMOND("\u2666");
+enum class CardSuit(val text: String, val symbol: String) {
+    SPADE("s", "\u2660"),
+    HEART("h", "\u2665"),
+    CLUB("c", "\u2663"),
+    DIAMOND("d", "\u2666");
 
     override fun toString(): String {
         return symbol
     }
 
     companion object {
-        fun fromString(symbol: String): CardSuit {
+        fun fromText(symbol: String): CardSuit {
             return when (symbol) {
                 "s" -> SPADE
                 "h" -> HEART

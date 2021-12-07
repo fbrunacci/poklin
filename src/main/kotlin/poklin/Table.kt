@@ -2,7 +2,7 @@ package poklin
 
 import java.util.*
 
-class Table(val maxSeats: Int, var dealerSeat: Int, players: List<Player>) {
+class Table(val maxSeats: Int, players: List<Player>, var dealerSeat: Int = 1) {
 
     var currentPlayerSeat = -1
     var playersMap: MutableMap<Int, Player> = HashMap()
@@ -15,9 +15,6 @@ class Table(val maxSeats: Int, var dealerSeat: Int, players: List<Player>) {
         for (player in players) {
             playersMap[player.seat] = player
         }
-    }
-
-    constructor(maxSeats: Int, players: LinkedList<Player>) : this(maxSeats, 1, players) { // TODO remove this
     }
 
     private fun initActivePlayers(players: Collection<Player>) {
@@ -62,7 +59,7 @@ class Table(val maxSeats: Int, var dealerSeat: Int, players: List<Player>) {
         while (!inGamePlayers.contains(playersMap[currentPlayerSeat]) || playersMap[currentPlayerSeat]!!.money == 0) {
             currentPlayerSeat = (currentPlayerSeat + 1) % maxSeats
         }
-        return requireNotNull(playersMap[currentPlayerSeat])
+        return currentPlayer()
     }
 
     fun currentPlayer(): Player {

@@ -25,7 +25,7 @@ internal class DeckTest {
     @Test
     fun testDeckFifo() {
         val deck = DeckFifo()
-        val clubAce = Card(CardSuit.fromString("c"), CardNumber.fromSymbol("A"))
+        val clubAce = Card(CardSuit.fromText("c"), CardNumber.fromText("A"))
         val diamondAce = Card(DIAMOND, ACE)
         deck.pushCardToTop(diamondAce)
         deck.pushCardToTop(clubAce)
