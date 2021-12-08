@@ -1,21 +1,31 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.compose.compose
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    kotlin("jvm") version "1.5.30"
+    kotlin("jvm") version "1.5.31"
+    id("org.jetbrains.compose") version "1.0.0"
 }
-group = "fbrunacci.poklin"
-version = "1.0-SNAPSHOT"
 
 repositories {
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     mavenCentral()
 }
 dependencies {
+    implementation(compose.desktop.currentOs)
     implementation("com.h2database:h2:1.3.168")
     implementation("com.google.inject:guice:3.0")
     implementation("dev.misfitlabs.kotlinguice4:kotlin-guice:1.5.0")
     implementation("org.junit.jupiter:junit-jupiter:5.7.0")
     testImplementation(kotlin("test-junit"))
 }
-tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "1.8"
+
+compose.desktop {
+    application {
+        mainClass = "poklin.compose.MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "Poklin"
+        }
+    }
 }
