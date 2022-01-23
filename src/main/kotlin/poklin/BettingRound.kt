@@ -8,7 +8,7 @@ import poklin.model.bet.BettingRoundName
 import poklin.opponentmodeling.ContextAction
 import poklin.opponentmodeling.ContextInformation
 
-class BettingRound(private val gameHand: GameHand) {
+class BettingRound(private val game: Game) {
     private val playersBet: MutableMap<Player, Bet>
     val contextInformations: List<ContextInformation> = ArrayList()
     var highestBet = 0
@@ -78,7 +78,7 @@ class BettingRound(private val gameHand: GameHand) {
         //Logger.get().log("Player #" + player.getNumber() + " placeBet:" + bet);
         require(bet <= player.money) { "You can't bet more money that you own playerBet:" + previousBetAmount + " bet:" + bet + " player:" + player + " money:" + player.money }
         player.removeMoney(bet)
-        gameHand.contributePot(bet, player)
+        game.contributePot(bet, player)
         if (bet + previousBetAmount > highestBet) {
             highestBet = bet + previousBetAmount
         } else require(!(bet + previousBetAmount < highestBet && player.money != 0)) { "You can't bet less than the higher bet (bet:" + bet + " highestBet:" + highestBet + ") player:" + player + " money:" + player.money }
@@ -171,7 +171,7 @@ class BettingRound(private val gameHand: GameHand) {
     init {
         // init des Bet pour chaque joueur (action null, amount 0)
         playersBet = HashMap()
-        for (player in gameHand.table.getInGamePlayers()) {
+        for (player in game.table.getInGamePlayers()) {
             if (player.money > 0) { // TODO voir si > 0 necessaire
                 playersBet[player] = Bet(NONE)
             }

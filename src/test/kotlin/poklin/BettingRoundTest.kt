@@ -21,15 +21,15 @@ class BettingRoundTest {
 
     @Test
     fun testPlayerCanBetWhenRoundStart() {
-        val gameHand = GameHand(players, 10, 20)
-        val bettingRound = BettingRound(gameHand)
+        val game = Game(players, 10, 20)
+        val bettingRound = BettingRound(game)
         Assert.assertTrue(bettingRound.playerCanBet())
     }
 
     @Test
     fun testPlayerCanBetWhenP2HasNoActionStart() {
-        val gameHand = GameHand(players, 10, 20)
-        val bettingRound = BettingRound(gameHand)
+        val game = Game(players, 10, 20)
+        val bettingRound = BettingRound(game)
         bettingRound.placeBet(players.iterator().next(), RAISE, 10)
         Assert.assertTrue(bettingRound.playerCanBet())
     }

@@ -1,17 +1,17 @@
 package poklin.controler
 
-import poklin.GameHand
+import poklin.Game
 import poklin.Player
 import poklin.model.bet.BettingDecision
 import poklin.model.cards.Card
 
 abstract class PlayerController {
-    fun doDecide(player: Player, gameHand: GameHand): BettingDecision {
+    fun doDecide(player: Player, game: Game): BettingDecision {
         val cards: MutableList<Card> = ArrayList()
-        cards.addAll(gameHand.sharedCards)
+        cards.addAll(game.sharedCards)
         cards.addAll(player.holeCards!!)
-        return decide(player, gameHand, cards)
+        return decide(player, game, cards)
     }
 
-    protected abstract fun decide(player: Player, gameHand: GameHand, cards: List<Card>): BettingDecision
+    protected abstract fun decide(player: Player, currentGame: Game, cards: List<Card>): BettingDecision
 }

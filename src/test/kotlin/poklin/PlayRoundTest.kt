@@ -6,7 +6,7 @@ import dev.misfitlabs.kotlinguice4.KotlinModule
 import org.junit.Before
 import org.junit.Test
 import poklin.PlayRoundTest.TestGamePropertiesModule.TestGameProperties
-import poklin.controler.GameHandController
+import poklin.controler.GameController
 import poklin.dependencyinjection.TexasModule
 import poklin.model.bet.BettingDecision
 import poklin.model.bet.BettingDecision.Companion.RAISE_CUSTOM
@@ -37,26 +37,26 @@ class PlayRoundTest {
         }
     }
 
-    lateinit var gameHandController: GameHandController
+    lateinit var gameController: GameController
     lateinit var testGameProperties: TestGameProperties
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
         val injector = Guice.createInjector(TexasModule(), TestGamePropertiesModule())
-        gameHandController = injector.getInstance(GameHandController::class.java)
+        gameController = injector.getInstance(GameController::class.java)
         testGameProperties = injector.getInstance(GameProperties::class.java) as TestGameProperties
     }
 
     @Test
     fun playRound() {
-        val gameHand = GameHand(testGameProperties.players, 10, 20)
+        val game = Game(testGameProperties.players, 10, 20)
         with(testGameProperties) {
             player2Controller.pushDecision(RAISE_CUSTOM(50))
             player1Controller.pushDecision(BettingDecision.CALL)
             player2Controller.pushDecision(BettingDecision.FOLD)
         }
-        gameHandController.play(gameHand)
+        gameController.play(game)
 
         with(testGameProperties) {
             println("=====================")
@@ -67,45 +67,45 @@ class PlayRoundTest {
 
     @Test
     fun playRoundS1() {
-        val gameHand = GameHand(testGameProperties.players, 10, 20)
+        val game = Game(testGameProperties.players, 10, 20)
         with(testGameProperties) {
             player2Controller.pushDecision(RAISE_CUSTOM(50))
             player1Controller.pushDecision(BettingDecision.CALL)
-            gameHandController.playRound(gameHand)
+            gameController.playRound(game)
             player2Controller.pushDecision(BettingDecision.FOLD)
-            gameHandController.playRound(gameHand)
+            gameController.playRound(game)
         }
     }
 
     @Test
     fun playRoundS2() {
-        val gameHand = GameHand(testGameProperties.players, 10, 20)
+        val game = Game(testGameProperties.players, 10, 20)
         with(testGameProperties) {
             player2Controller.pushDecision(RAISE_CUSTOM(50))
             player1Controller.pushDecision(BettingDecision.CALL)
-            gameHandController.playRound(gameHand)
+            gameController.playRound(game)
             player2Controller.pushDecision(BettingDecision.CHECK)
             player1Controller.pushDecision(BettingDecision.FOLD)
-            gameHandController.playRound(gameHand)
+            gameController.playRound(game)
         }
     }
 
     @Test
     fun playRoundS3() {
-        val gameHand = GameHand(testGameProperties.players, 10, 20)
+        val game = Game(testGameProperties.players, 10, 20)
         with(testGameProperties) {
             player2Controller.pushDecision(RAISE_CUSTOM(50))
             player1Controller.pushDecision(BettingDecision.CALL)
-            gameHandController.playRound(gameHand)
+            gameController.playRound(game)
             player2Controller.pushDecision(BettingDecision.CHECK)
             player1Controller.pushDecision(BettingDecision.CHECK)
-            gameHandController.playRound(gameHand)
+            gameController.playRound(game)
             player2Controller.pushDecision(BettingDecision.CHECK)
             player1Controller.pushDecision(BettingDecision.CHECK)
-            gameHandController.playRound(gameHand)
+            gameController.playRound(game)
             player2Controller.pushDecision(BettingDecision.CHECK)
             player1Controller.pushDecision(BettingDecision.CHECK)
-            gameHandController.playRound(gameHand)
+            gameController.playRound(game)
         }
     }
 
@@ -122,7 +122,7 @@ class PlayRoundTest {
     @Test
     fun playGameS3() {
         val deckFifo = DeckFifo()
-        val gameHand = GameHand(testGameProperties.players, 10, 20, deckFifo)
+        val game = Game(testGameProperties.players, 10, 20, deckFifo)
         Cards.fromText("As Ks Qs Js 10s 9s 8s 7s 6s 5s 4s 3s 2s")
             .forEach { card -> deckFifo.pushCardToTop(card) }
 
@@ -142,7 +142,7 @@ class PlayRoundTest {
             // post river
             player2Controller.pushDecision(BettingDecision.CHECK)
             player1Controller.pushDecision(BettingDecision.CHECK)
-            gameHandController.play(gameHand)
+            gameController.play(game)
 
             println("=====================")
             println(player1)
@@ -152,7 +152,7 @@ class PlayRoundTest {
 
     @Test
     fun playGameS4() {
-        val gameHand = GameHand(testGameProperties.players, 10, 20)
+        val game = Game(testGameProperties.players, 10, 20)
         with(testGameProperties) {
             // preflop
             player2Controller.pushDecision(RAISE_CUSTOM(50))
@@ -168,13 +168,13 @@ class PlayRoundTest {
 
             // post river
             player2Controller.pushDecision(BettingDecision.FOLD)
-            gameHandController.play(gameHand)
+            gameController.play(game)
         }
     }
 
     @Test
     fun playGameSplitPot() {
-        val gameHand = GameHand(testGameProperties.players, 10, 20)
+        val game = Game(testGameProperties.players, 10, 20)
         with(testGameProperties) {
             // preflop
             player2Controller.pushDecision(RAISE_CUSTOM(50))
@@ -190,7 +190,7 @@ class PlayRoundTest {
 
             // post river
             player2Controller.pushDecision(BettingDecision.FOLD)
-            gameHandController.play(gameHand)
+            gameController.play(game)
         }
     }
 }

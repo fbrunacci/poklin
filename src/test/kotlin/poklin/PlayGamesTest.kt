@@ -6,7 +6,7 @@ import com.google.inject.Singleton
 import dev.misfitlabs.kotlinguice4.KotlinModule
 import org.junit.Before
 import org.junit.Test
-import poklin.controler.GameHandController
+import poklin.controler.GameController
 import poklin.controler.PokerController
 import poklin.controler.player.PlayerControllerBluff
 import poklin.controler.player.PlayerControllerNormal
@@ -40,7 +40,7 @@ class PlayGamesTest {
 
     @Test
     fun play10Round() {
-        GameHandController.DD = 0
+        GameController.DD = 0
         for (i in 1..10) {
             val pokerController = injector.getInstance(PokerController::class.java)
             pokerController.play()

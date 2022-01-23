@@ -1,7 +1,6 @@
 package poklin.controler.player
 
-import kotlinx.coroutines.delay
-import poklin.GameHand
+import poklin.Game
 import poklin.HandPowerRanker
 import poklin.Player
 import poklin.dependencyinjection.AbstractPlayerController
@@ -15,7 +14,7 @@ class PlayerControllerBluff : AbstractPlayerController() {
     }
 
     public override fun decidePreFlop(
-        player: Player, gameHand: GameHand,
+        player: Player, game: Game,
         cards: List<Card>
     ): BettingDecision {
         val card1 = cards[0]
@@ -24,7 +23,7 @@ class PlayerControllerBluff : AbstractPlayerController() {
         return if (card1.number == card2.number || sumPower <= 8) {
             BettingDecision.RAISE_MIN
         } else {
-            if (sumPower > 16 || canCheck(gameHand, player)) {
+            if (sumPower > 16 || canCheck(game, player)) {
                 BettingDecision.CALL
             } else {
                 BettingDecision.FOLD
@@ -33,7 +32,7 @@ class PlayerControllerBluff : AbstractPlayerController() {
     }
 
     public override fun decideAfterFlop(
-        player: Player, gameHand: GameHand,
+        player: Player, game: Game,
         cards: List<Card>
     ): BettingDecision {
         val handPower = HandPowerRanker.rank(cards)
@@ -43,7 +42,7 @@ class PlayerControllerBluff : AbstractPlayerController() {
         } else if (handPowerType.power >= HandPowerType.STRAIGHT.power) {
             BettingDecision.RAISE_MIN
         } else {
-            if (canCheck(gameHand, player)) {
+            if (canCheck(game, player)) {
                 BettingDecision.CALL
             } else BettingDecision.FOLD
         }

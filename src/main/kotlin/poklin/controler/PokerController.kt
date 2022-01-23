@@ -2,19 +2,19 @@ package poklin.controler
 
 import poklin.utils.ILogger
 import poklin.GameProperties
-import poklin.Game
+import poklin.Games
 import javax.inject.Inject
 
 class PokerController @Inject constructor(
-    private val gameHandController: GameHandController,
+    private val gameController: GameController,
     private val logger: ILogger, private val gameProperties: GameProperties
 ) {
-    private val game = Game(gameProperties.players)
+    private val games = Games(gameProperties.players)
     fun play() {
         var i = 0
         while (i < gameProperties.numberOfHands && gameProperties.nbPlayersWithMoney > 1) {
-            gameHandController.play(game)
-            game.setNextDealer()
+            gameController.play(games)
+            games.setNextDealer()
             i++
         }
         printFinalStats()
@@ -24,8 +24,8 @@ class PokerController @Inject constructor(
         logger.log("-----------------------------------------")
         logger.log("Statistics")
         logger.log("-----------------------------------------")
-        logger.log("Number of hands played: " + game.gameHandsCount())
-        for (player in game.players) {
+        logger.log("Number of hands played: " + games.gamesCount())
+        for (player in games.players) {
             logger.log(
                 player.info() + " - " + player.playerController.toString().padEnd(8) + " : " + player
                     .money + "$"

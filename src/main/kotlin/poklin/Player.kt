@@ -47,8 +47,8 @@ class Player(val seat: Int, money: Int, val playerController: PlayerController, 
         return stringBuilder.toString()
     }
 
-    fun decide(gameHand: GameHand): BettingDecision {
-        return playerController.doDecide(this, gameHand)
+    fun decide(game: Game): BettingDecision {
+        return playerController.doDecide(this, game)
     }
 
     fun removeMoney(amount: Int) {

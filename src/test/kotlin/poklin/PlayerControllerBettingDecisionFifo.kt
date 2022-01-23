@@ -7,7 +7,7 @@ import java.util.*
 
 class PlayerControllerBettingDecisionFifo : PlayerController() {
     var fifo = LinkedList<BettingDecision>()
-    override fun decide(player: Player, gameHand: GameHand, cards: List<Card>): BettingDecision {
+    override fun decide(player: Player, currentGame: Game, cards: List<Card>): BettingDecision {
         if (fifo.isEmpty()) {
             throw RuntimeException("no more BettingDecision in fifo for player " + player.seat)
         }

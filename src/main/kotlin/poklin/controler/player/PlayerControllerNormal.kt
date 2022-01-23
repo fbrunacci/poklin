@@ -1,6 +1,6 @@
 package poklin.controler.player
 
-import poklin.GameHand
+import poklin.Game
 import poklin.Player
 import poklin.HandPowerRanker
 import poklin.dependencyinjection.AbstractPlayerController
@@ -14,7 +14,7 @@ class PlayerControllerNormal : AbstractPlayerController() {
     }
 
     public override fun decidePreFlop(
-        player: Player, gameHand: GameHand,
+        player: Player, game: Game,
         cards: List<Card>
     ): BettingDecision {
         val card1 = cards!![0]
@@ -22,7 +22,7 @@ class PlayerControllerNormal : AbstractPlayerController() {
         return if (card1.number == card2.number) {
             BettingDecision.RAISE_MIN
         } else if (card1.number.power + card2.number.power > 16
-            || canCheck(gameHand, player)
+            || canCheck(game, player)
         ) {
             BettingDecision.CALL
         } else {
@@ -30,11 +30,11 @@ class PlayerControllerNormal : AbstractPlayerController() {
         }
     }
 
-    public override fun decideAfterFlop(player: Player, gameHand: GameHand, cards: List<Card>): BettingDecision {
+    public override fun decideAfterFlop(player: Player, game: Game, cards: List<Card>): BettingDecision {
         val handPower = HandPowerRanker.rank(cards)
         val handPowerType = handPower.handPowerType
         return if (handPowerType == HandPowerType.HIGH_CARD) {
-            if (canCheck(gameHand!!, player)) {
+            if (canCheck(game!!, player)) {
                 BettingDecision.CALL
             } else BettingDecision.FOLD
         } else if (handPowerType.power >= HandPowerType.STRAIGHT.power) {

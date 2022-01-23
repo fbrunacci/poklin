@@ -1,6 +1,6 @@
 package poklin.dependencyinjection
 
-import poklin.GameHand
+import poklin.Game
 import poklin.Player
 import poklin.controler.PlayerController
 import poklin.model.bet.BettingDecision
@@ -9,21 +9,21 @@ import poklin.model.cards.Card
 
 abstract class AbstractPlayerController : PlayerController() {
     public override fun decide(
-        player: Player, gameHand: GameHand,
+        player: Player, currentGame: Game,
         cards: List<Card>
     ): BettingDecision {
-        return if (gameHand.bettingRoundName == BettingRoundName.PRE_FLOP) {
-            decidePreFlop(player, gameHand, cards)
+        return if (currentGame.bettingRoundName == BettingRoundName.PRE_FLOP) {
+            decidePreFlop(player, currentGame, cards)
         } else {
-            decideAfterFlop(player, gameHand, cards)
+            decideAfterFlop(player, currentGame, cards)
         }
     }
 
-    protected fun canCheck(gameHand: GameHand, player: Player): Boolean {
-        val bettingRound = gameHand.currentBettingRound
+    protected fun canCheck(game: Game, player: Player): Boolean {
+        val bettingRound = game.currentBettingRound
         return bettingRound.highestBet == bettingRound.getBetForPlayer(player)
     }
 
-    protected abstract fun decidePreFlop(player: Player, gameHand: GameHand, cards: List<Card>): BettingDecision
-    protected abstract fun decideAfterFlop(player: Player, gameHand: GameHand, cards: List<Card>): BettingDecision
+    protected abstract fun decidePreFlop(player: Player, game: Game, cards: List<Card>): BettingDecision
+    protected abstract fun decideAfterFlop(player: Player, game: Game, cards: List<Card>): BettingDecision
 }

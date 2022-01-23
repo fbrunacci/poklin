@@ -1,6 +1,6 @@
 package poklin.controler.player
 
-import poklin.GameHand
+import poklin.Game
 import poklin.Player
 import poklin.controler.PlayerController
 import poklin.compose.state.PlayerState
@@ -13,7 +13,7 @@ class AskPlayerController(val playerState: PlayerState) : PlayerController() {
         return "ask"
     }
 
-    override fun decide(player: Player, gameHand: GameHand, cards: List<Card>): BettingDecision {
+    override fun decide(player: Player, currentGame: Game, cards: List<Card>): BettingDecision {
         playerState.waitForDecision = true
         playerState.bettingDecision = NONE
         // TODO
