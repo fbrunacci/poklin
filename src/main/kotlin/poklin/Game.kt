@@ -70,7 +70,7 @@ open class Game(val players: LinkedList<Player>, val smallBlind: Int, val bigBli
         TableState.sharedCard3 = sharedCard3.toText()
     }
 
-    private fun  dealSharedCard() {
+    private fun dealSharedCard() {
         val sharedCard = deck.removeTopCard()
         sharedCards.add(sharedCard)
         if (bettingRoundName == BettingRoundName.POST_TURN) {
@@ -135,6 +135,10 @@ open class Game(val players: LinkedList<Player>, val smallBlind: Int, val bigBli
 
     fun getPots(): List<Pot> {
         return pots
+    }
+
+    fun canCheck(player: Player): Boolean {
+        return false
     }
 
     val totalPot: Int

@@ -12,6 +12,8 @@ class PlayerState(val name: String, val seat : Int) {
     var bettingAmount by mutableStateOf(0)
     var moneyPutInPot by mutableStateOf(0)
 
+    var canCheck by mutableStateOf(false)
+
     val dealer by mutableStateOf(false)
     var card1 by mutableStateOf("")
     var card2 by mutableStateOf("")

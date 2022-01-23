@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -81,6 +82,8 @@ fun PokerGame() {
                 tableState.players.forEach {
                     PlayerInfo(it)
                 }
+                Spacer(modifier = Modifier.height(8.dp))
+                BettingChoice(tableState.players)
             }
         }
     }
@@ -125,18 +128,7 @@ fun PlayerInfo(
                 MiniCards(playerState.card1)
                 MiniCards(playerState.card2)
             }
-            if (playerState.waitForDecision) {
-                BettingChoiceButton(playerState)
-            }
         }
-        /*
-        var sliderState by remember { mutableStateOf(0f) }
-        Slider(value = sliderState, modifier = Modifier.fillMaxWidth().padding(8.dp),
-            onValueChange = { newValue ->
-                sliderState = newValue
-            }
-        )
-        */
     }
 }
 
@@ -156,8 +148,25 @@ fun MiniCards(card: String) {
 }
 
 @Composable
+fun BettingChoice(playerStates: SnapshotStateList<PlayerState>) {
+    playerStates.forEach { playerState ->
+        if (playerState.waitForDecision) {
+            BettingChoiceButton(playerState)
+        }
+    }
+}
+
+@Composable
 fun BettingChoiceButton(playerState: PlayerState) {
     Row {
+        Text(
+            "" + playerState.seat + ":",
+            modifier = Modifier.width(20.dp)
+        )
+        Text(
+            playerState.name,
+            modifier = Modifier.width(120.dp)
+        )
         BetButton(
             text = "Fold",
             onClick = {
@@ -187,6 +196,14 @@ fun BettingChoiceButton(playerState: PlayerState) {
                 playerState.bettingAmount = 20
                 playerState.waitForDecision = false
             })
+        /*
+        var sliderState by remember { mutableStateOf(0f) }
+        Slider(value = sliderState, modifier = Modifier.fillMaxWidth().padding(8.dp),
+            onValueChange = { newValue ->
+                sliderState = newValue
+            }
+        )
+        */
     }
 }
 
