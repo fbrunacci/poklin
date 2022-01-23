@@ -15,7 +15,6 @@ class Player(val seat: Int, money: Int, val playerController: PlayerController, 
             playerState?.money = field
         }
 
-
     var holeCards: List<Card>? = null
         private set
 

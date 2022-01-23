@@ -180,14 +180,14 @@ open class GameController @Inject constructor(
 
     fun calculatePotDistribution(game: Game) {
         // Per rank (single or multiple winners), calculate pot distribution.
-        val totalPot = game.totalPot
+        val totalPot = game.pot.totalPot
         val potDivision: MutableMap<Player, Int> = HashMap()
         val activePlayers = game.table.getActivePlayers()
 
         // TODO start from after dealer for odds
         val winnersMap = getWinnersByHandPower(game)
         for ((handPower, winners) in winnersMap) {
-            for (pot in game.getPots()) {
+            for (pot in game.pot.getSidePots()) {
                 // Determine how many winners share this pot.
                 //logger.log(pot.toString()+" nb winner:"+pot.getContributors().size());
                 var noOfWinnersInPot = 0

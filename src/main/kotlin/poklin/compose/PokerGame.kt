@@ -174,21 +174,21 @@ fun BettingChoiceButton(playerState: PlayerState) {
                 playerState.waitForDecision = false
             }
         )
-
-        BetButton(
-            text = "Check",
-            onClick = {
-                playerState.bettingDecision = BettingDecision.BettingAction.CHECK
-                playerState.waitForDecision = false
-            })
-
-        BetButton(
-            text = "Call",
-            onClick = {
-                playerState.bettingDecision = BettingDecision.BettingAction.CALL
-                playerState.waitForDecision = false
-            })
-
+        if (playerState.canCheck) {
+            BetButton(
+                text = "Check",
+                onClick = {
+                    playerState.bettingDecision = BettingDecision.BettingAction.CHECK
+                    playerState.waitForDecision = false
+                })
+        } else {
+            BetButton(
+                text = "Call",
+                onClick = {
+                    playerState.bettingDecision = BettingDecision.BettingAction.CALL
+                    playerState.waitForDecision = false
+                })
+        }
         BetButton(
             text = "Rmin",
             onClick = {

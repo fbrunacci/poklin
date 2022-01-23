@@ -13,10 +13,10 @@ import java.util.*
 
 open class Game(val players: LinkedList<Player>, val smallBlind: Int, val bigBlind: Int, val deck: IDeck = Deck()) {
 
+    val pot: Pot = Pot()
     val table = Table(6, players)
     val sharedCards: MutableList<Card> = ArrayList()
     private val bettingRounds: MutableList<BettingRound> = ArrayList()
-    private val pots: MutableList<Pot> = ArrayList()
 
     fun nextRound(): BettingRound {
         table.newRound()
@@ -104,50 +104,7 @@ open class Game(val players: LinkedList<Player>, val smallBlind: Int, val bigBli
         return amountNeededToCall.toDouble() / (amountNeededToCall + totalBets)
     }
 
-    fun contributePot(amount: Int, player: Player) {
-        TableState.pot += amount
-        TableState.playerStateAtSeat(player.seat).moneyPutInPot += amount
-
-        var amount = amount
-        for (pot in pots) {
-            if (!pot.hasContributer(player)) {
-                val potBet = pot.bet
-                if (amount >= potBet) {
-                    // Regular call, bet or raise.
-                    pot.addContributer(player)
-                    amount -= pot.bet
-                } else {
-                    // Partial call (all-in); redistribute pots.
-                    pots.add(pot.split(player, amount))
-                    amount = 0
-                }
-            }
-            if (amount <= 0) {
-                break
-            }
-        }
-        if (amount > 0) {
-            val pot = Pot(amount)
-            pot.addContributer(player)
-            pots.add(pot)
-        }
-    }
-
-    fun getPots(): List<Pot> {
-        return pots
-    }
-
     fun canCheck(player: Player): Boolean {
-        return false
+        return pot.getMaxContribution().equals(pot.getPlayerContribution(player))
     }
-
-    val totalPot: Int
-        get() {
-            var totalPot = 0
-            for (pot in pots) {
-                totalPot += pot.value
-            }
-            return totalPot
-        }
-
 }

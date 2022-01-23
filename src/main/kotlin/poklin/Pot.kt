@@ -1,55 +1,66 @@
 package poklin
 
-class Pot(var bet: Int) {
+import poklin.compose.state.TableState
 
-    val contributors: MutableSet<Player> = HashSet()
+class Pot {
 
-    fun addContributer(player: Player) {
-        contributors.add(player)
-    }
+    private val sidePots: MutableList<SidePot> = ArrayList()
+    private val playerContribution: MutableMap<Player, Int> = HashMap()
 
-    fun hasContributer(player: Player): Boolean {
-        return contributors.contains(player)
-    }
-
-    val potSize: Int
-        get() = bet * contributors.size
-
-    fun split(player: Player, partialBet: Int): Pot {
-        val pot = Pot(bet - partialBet)
-        for (contributer in contributors) {
-            pot.addContributer(contributer)
+    fun contributePot(amount: Int, player: Player) {
+        TableState.pot += amount
+        TableState.playerStateAtSeat(player.seat).moneyPutInPot += amount
+        
+        if (!playerContribution.containsKey(player)) {
+            playerContribution[player] = amount
+        } else {
+            playerContribution[player] = playerContribution[player]!!.plus(amount)
         }
-        bet = partialBet
-        contributors.add(player)
-        return pot
-    }
 
-    fun clear() {
-        bet = 0
-        contributors.clear()
-    }
-
-    val value: Int
-        get() = bet * contributors.size
-
-    override fun toString(): String {
-        val sb = StringBuilder()
-        sb.append(bet.toString())
-        sb.append(": {")
-        var isFirst = true
-        for (contributer in contributors) {
-            if (isFirst) {
-                isFirst = false
-            } else {
-                sb.append(", ")
+        var amount = amount
+        for (pot in sidePots) {
+            if (!pot.hasContributer(player)) {
+                val potBet = pot.bet
+                if (amount >= potBet) {
+                    // Regular call, bet or raise.
+                    pot.addContributer(player)
+                    amount -= pot.bet
+                } else {
+                    // Partial call (all-in); redistribute pots.
+                    sidePots.add(pot.split(player, amount))
+                    amount = 0
+                }
             }
-            sb.append(contributer.seat)
+            if (amount <= 0) {
+                break
+            }
         }
-        sb.append('}')
-        sb.append(" (Total: ")
-        sb.append(potSize.toString())
-        sb.append(')')
-        return sb.toString()
+        if (amount > 0) {
+            val sidePot = SidePot(amount)
+            sidePot.addContributer(player)
+            sidePots.add(sidePot)
+        }
     }
+
+    fun getSidePots(): List<SidePot> {
+        return sidePots
+    }
+
+    fun getPlayerContribution(player: Player): Int {
+        return playerContribution[player] ?: 0
+    }
+
+    fun getMaxContribution(): Int {
+        return playerContribution.values.maxOrNull() ?: 0
+    }
+
+    val totalPot: Int
+        get() {
+            var totalPot = 0
+            for (pot in sidePots) {
+                totalPot += pot.value
+            }
+            return totalPot
+        }
+
 }

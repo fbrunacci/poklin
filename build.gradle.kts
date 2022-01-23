@@ -6,6 +6,17 @@ plugins {
     id("org.jetbrains.compose") version "1.0.0"
 }
 
+java {
+    toolchain {
+      languageVersion.set(JavaLanguageVersion.of("16")) // "8"
+    }
+}
+kotlin {
+    jvmToolchain {
+        (this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of("16")) // "8"
+    }
+}
+
 repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     mavenCentral()
