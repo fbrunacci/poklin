@@ -1,14 +1,21 @@
 package poklin
 
 import poklin.controler.PlayerController
+import poklin.compose.state.PlayerState
 import poklin.model.bet.BettingDecision
 import poklin.model.cards.Card
 import java.util.*
 
-class Player(
-    val seat: Int, var money: Int,
-    val playerController: PlayerController
-) {
+class Player(val seat: Int, money: Int, val playerController: PlayerController, val playerState: PlayerState? = null) {
+
+    var money: Int = money
+        get() = field
+        set(value) {
+            field = value
+            playerState?.money = field
+        }
+
+
     var holeCards: List<Card>? = null
         private set
 
@@ -46,13 +53,17 @@ class Player(
 
     fun removeMoney(amount: Int) {
         money -= amount
+        playerState?.money = money
     }
 
     fun addMoney(amount: Int) {
         money += amount
+        playerState?.money = money
     }
 
     fun setHoleCards(hole1: Card, hole2: Card) {
         holeCards = Arrays.asList(hole1, hole2)
+        playerState?.card1 = hole1.toText()
+        playerState?.card2 = hole2.toText()
     }
 }

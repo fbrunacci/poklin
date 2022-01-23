@@ -1,6 +1,7 @@
 package poklin.controler
 
 import poklin.*
+import poklin.compose.state.TableState
 import poklin.model.HandPower
 import poklin.model.bet.BettingDecision
 import poklin.model.bet.BettingRoundName
@@ -17,6 +18,7 @@ open class GameHandController @Inject constructor(
     private val handStrengthEvaluator: HandStrengthEvaluator,
 ) {
     fun play(game: Game) {
+        TableState.newGame()
         val gameHand = createGameHand(game)
         logGameHand(game, gameHand)
         play(gameHand)
@@ -96,7 +98,8 @@ open class GameHandController @Inject constructor(
         gameHand.currentBettingRound.placeBet(bigBlindPlayer, BettingDecision.BettingAction.BIGBLIND, bigBlind)
     }
 
-    private fun applyDecision(gameHand: GameHand, player: Player?, bettingDecision: BettingDecision) {
+    private fun applyDecision(gameHand: GameHand, player: Player, bettingDecision: BettingDecision) {
+        TableState.playerStateAtSeat(player.seat).bettingDecision = bettingDecision.bettingAction
         val handStrength = handStrengthEvaluator.evaluate(
             player!!.holeCards, gameHand.sharedCards,
             gameHand.table.getActivePlayers().size
@@ -173,34 +176,9 @@ open class GameHandController @Inject constructor(
     protected fun showDown(gameHand: GameHand) {
         logger.log("--- Showdown")
         calculatePotDistribution(gameHand)
-
-        /*
-        // Showdown
-        LinkedHashMap<HandPower,List<Player>> winners = getWinners(gameHand);
-        winners.entrySet();
-        for (Map.Entry<HandPower, List<Player>> handPowerList : winners.entrySet()) {
-
-            // Gains
-            int gain = gameHand.getTotalBets() / winners.size();
-            int modulo = gameHand.getTotalBets() % winners.size();
-
-            for (Player winner : handPowerList.getValue()) {
-                int gainAndModulo = gain;
-                if (modulo > 0) {
-                    gainAndModulo += modulo;
-                }
-                winner.addMoney(gainAndModulo);
-                modulo--;
-            }
-        }
-        */
-
-        // Opponent modeling
-        // opponentModeler.save(gameHand);
     }
 
     fun calculatePotDistribution(gameHand: GameHand) {
-
         // Per rank (single or multiple winners), calculate pot distribution.
         val totalPot = gameHand.totalPot
         val potDivision: MutableMap<Player, Int> = HashMap()

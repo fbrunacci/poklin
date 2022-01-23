@@ -1,8 +1,9 @@
 package poklin.controler.player
 
+import kotlinx.coroutines.delay
 import poklin.GameHand
-import poklin.Player
 import poklin.HandPowerRanker
+import poklin.Player
 import poklin.dependencyinjection.AbstractPlayerController
 import poklin.model.HandPowerType
 import poklin.model.bet.BettingDecision
@@ -17,7 +18,7 @@ class PlayerControllerBluff : AbstractPlayerController() {
         player: Player, gameHand: GameHand,
         cards: List<Card>
     ): BettingDecision {
-        val card1 = cards!![0]
+        val card1 = cards[0]
         val card2 = cards[1]
         val sumPower = card1.number.power + card2.number.power
         return if (card1.number == card2.number || sumPower <= 8) {

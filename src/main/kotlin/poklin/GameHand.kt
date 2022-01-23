@@ -1,5 +1,6 @@
 package poklin
 
+import poklin.compose.state.TableState
 import poklin.model.bet.BettingDecision
 import poklin.model.bet.BettingRoundName
 import poklin.model.bet.BettingRoundName.Companion.fromRoundNumber
@@ -58,13 +59,25 @@ open class GameHand(val players: LinkedList<Player>, val smallBlind: Int, val bi
     }
 
     private fun dealFlopCards() {
-        sharedCards.add(deck.removeTopCard())
-        sharedCards.add(deck.removeTopCard())
-        sharedCards.add(deck.removeTopCard())
+        val sharedCard1 = deck.removeTopCard()
+        val sharedCard2 = deck.removeTopCard()
+        val sharedCard3 = deck.removeTopCard()
+        sharedCards.add(sharedCard1)
+        sharedCards.add(sharedCard2)
+        sharedCards.add(sharedCard3)
+        TableState.sharedCard1 = sharedCard1.toText()
+        TableState.sharedCard2 = sharedCard2.toText()
+        TableState.sharedCard3 = sharedCard3.toText()
     }
 
-    private fun dealSharedCard() {
-        sharedCards.add(deck.removeTopCard())
+    private fun  dealSharedCard() {
+        val sharedCard = deck.removeTopCard()
+        sharedCards.add(sharedCard)
+        if (bettingRoundName == BettingRoundName.POST_TURN) {
+            TableState.sharedCard4 = sharedCard.toText()
+        } else {
+            TableState.sharedCard5 = sharedCard.toText()
+        }
     }
 
     fun applyDecision(
@@ -91,10 +104,13 @@ open class GameHand(val players: LinkedList<Player>, val smallBlind: Int, val bi
         return amountNeededToCall.toDouble() / (amountNeededToCall + totalBets)
     }
 
-    fun contributePot(amount: Int, player: Player?) {
+    fun contributePot(amount: Int, player: Player) {
+        TableState.pot += amount
+        TableState.playerStateAtSeat(player.seat).moneyPutInPot += amount
+
         var amount = amount
         for (pot in pots) {
-            if (!pot.hasContributer(player!!)) {
+            if (!pot.hasContributer(player)) {
                 val potBet = pot.bet
                 if (amount >= potBet) {
                     // Regular call, bet or raise.

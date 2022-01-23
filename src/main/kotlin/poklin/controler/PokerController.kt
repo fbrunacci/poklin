@@ -3,7 +3,6 @@ package poklin.controler
 import poklin.utils.ILogger
 import poklin.GameProperties
 import poklin.Game
-import poklin.Player
 import javax.inject.Inject
 
 class PokerController @Inject constructor(
@@ -32,10 +31,5 @@ class PokerController @Inject constructor(
                     .money + "$"
             )
         }
-    }
-
-    init {
-
-        //Logger.setLogger(logger);
     }
 }

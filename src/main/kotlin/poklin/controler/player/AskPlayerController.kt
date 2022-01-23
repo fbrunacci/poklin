@@ -3,30 +3,38 @@ package poklin.controler.player
 import poklin.GameHand
 import poklin.Player
 import poklin.controler.PlayerController
+import poklin.compose.state.PlayerState
 import poklin.model.bet.BettingDecision
+import poklin.model.bet.BettingDecision.BettingAction.*
 import poklin.model.cards.Card
-import java.lang.IllegalArgumentException
-import java.util.*
 
-class AskPlayerController : PlayerController() {
+class AskPlayerController(val playerState: PlayerState) : PlayerController() {
     override fun toString(): String {
         return "ask"
     }
 
     override fun decide(player: Player, gameHand: GameHand, cards: List<Card>): BettingDecision {
-        val reader = Scanner(System.`in`)
-        println("Enter a number (0 FOLD, 1 CHECK, 2 CALL, 3 RAISE MIN, 4 RAISE POT, 5 ALLIN): ")
-        do {
-            val n = reader.nextInt() // Scans the next token of the input as an int.
-            when(n) {
-                0 -> return BettingDecision.FOLD
-                1 -> return BettingDecision.CHECK
-                2 -> return BettingDecision.CALL
-                3 -> return BettingDecision.RAISE_MIN
-                4 -> return BettingDecision.RAISE_POT
-                5 -> return BettingDecision.RAISE_ALLIN
-            }
-        } while (!(1<=n && n<=5))
-        throw IllegalArgumentException("Wrong choice")
+        playerState.waitForDecision = true
+        playerState.bettingDecision = NONE
+        // TODO
+        // playerState.canCheck = true/false
+        // playerState.minBet = xxx
+        // playerState.maxBet = xxx
+
+        println("AskPlayerController waitForDecision " + Thread.currentThread().name.toString())
+        var waitTime = 10000
+        while (waitTime > 0 && playerState.waitForDecision) {
+            Thread.sleep(500)
+            waitTime -= 500
+        }
+        playerState.waitForDecision = false
+
+        println("AskPlayerController wakeup " + Thread.currentThread().name.toString())
+        return when (playerState.bettingDecision) {
+            CHECK -> BettingDecision.CHECK
+            CALL -> BettingDecision.CALL
+            RAISE -> BettingDecision.RAISE_MIN
+            else -> BettingDecision.FOLD
+        }
     }
 }
