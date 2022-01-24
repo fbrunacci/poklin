@@ -25,14 +25,14 @@ class BettingRound(private val game: Game) {
         // Logger.get().log("Player #"+player.getNumber()+" bettingDecision:"+bettingDecision );
         val playerBet = getPlayerBet(player)
         when (bettingDecision.bettingAction) {
-            BettingAction.CHECK -> getPlayerBet(player).action = BettingAction.CHECK
-            BettingAction.FOLD -> getPlayerBet(player).action = BettingAction.FOLD
-            BettingAction.CALL -> placeBet(
+            CHECK -> getPlayerBet(player).action = CHECK
+            FOLD -> getPlayerBet(player).action = FOLD
+            CALL -> placeBet(
                 player,
                 bettingDecision.bettingAction,
                 Math.min(highestBet - playerBet.amount, player.money)
             )
-            BettingAction.RAISE -> when (bettingDecision.raiseAmount) {
+            RAISE -> when (bettingDecision.raiseAmount) {
                 RaiseAmount.RAISE_MIN -> placeBet(
                     player,
                     bettingDecision.bettingAction,
@@ -67,14 +67,14 @@ class BettingRound(private val game: Game) {
         get() {
             var potSize = 0
             for (bet in playersBet.values) {
-                potSize = potSize + bet.amount
+                potSize += bet.amount
             }
             return potSize
         }
 
     fun placeBet(player: Player, action: BettingAction, bet: Int) {
         val previousBet = getPlayerBet(player)
-        val previousBetAmount = previousBet!!.amount
+        val previousBetAmount = previousBet.amount
         //Logger.get().log("Player #" + player.getNumber() + " placeBet:" + bet);
         require(bet <= player.money) { "You can't bet more money that you own playerBet:" + previousBetAmount + " bet:" + bet + " player:" + player + " money:" + player.money }
         player.removeMoney(bet)

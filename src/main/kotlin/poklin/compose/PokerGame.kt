@@ -91,11 +91,11 @@ fun PokerGame() {
 
 @Composable
 fun sharedCards(tableState: TableState) {
-    MiniCards(tableState.sharedCard1)
-    MiniCards(tableState.sharedCard2)
-    MiniCards(tableState.sharedCard3)
-    MiniCards(tableState.sharedCard4)
-    MiniCards(tableState.sharedCard5)
+    NormalCards(tableState.sharedCard1)
+    NormalCards(tableState.sharedCard2)
+    NormalCards(tableState.sharedCard3)
+    NormalCards(tableState.sharedCard4)
+    NormalCards(tableState.sharedCard5)
 }
 
 @Composable
@@ -134,14 +134,27 @@ fun PlayerInfo(
 
 @Composable
 fun MiniCards(card: String) {
+    Cards("minicards", card, Modifier.width(20.dp).height(30.dp).padding(1.dp))
+}
+
+@Composable
+fun NormalCards(card: String) {
+    Cards("cards", card, Modifier.width(60.dp).height(90.dp).padding(1.dp))
+}
+
+
+@Composable
+fun Cards(folder: String, card: String, modifier: Modifier = Modifier) {
     if (card.isEmpty()) {
         Image(
-            painter = painterResource("minicards/back.png"),
+            painter = painterResource("${folder}/back.png"),
+            modifier = modifier,
             contentDescription = "$card"
         )
     } else {
         Image(
-            painter = painterResource("minicards/${card}.png"),
+            painter = painterResource("${folder}/${card}.png"),
+            modifier = modifier,
             contentDescription = "$card"
         )
     }
