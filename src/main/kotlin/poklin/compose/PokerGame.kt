@@ -3,6 +3,8 @@ package poklin.compose
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -24,8 +26,8 @@ import poklin.controler.player.AskPlayerController
 import poklin.dependencyinjection.TexasModule
 import poklin.model.bet.BettingDecision
 import poklin.model.bet.BettingDecision.BettingAction.NONE
-import poklin.utils.ConsoleLogger
 import poklin.utils.ILogger
+import poklin.utils.TableStateLogger
 
 @Composable
 fun PokerGame() {
@@ -49,41 +51,57 @@ fun PokerGame() {
         Player(
             2,
             1000,
-            AskPlayerController(playerState2),
+            AskPlayerController(playerState2), // PlayerControllerNormal(),
             playerState2
         )
     )
 
     var injector = Guice.createInjector(TexasModule(), object : KotlinModule() {
         override fun configure() {
-            bind<ILogger>().to<ConsoleLogger>().`in`<Singleton>()
+            bind<ILogger>().to<TableStateLogger>().`in`<Singleton>()
             bind<GameProperties>().toInstance(gameProperties)
         }
     })
     val pokerController = injector.getInstance(PokerController::class.java)
+    var i = 0
 
+    val scrollState = rememberScrollState()
+
+    // https://github.com/ecc-weizhi/on-screen-log ?
     MaterialTheme(colors = darkColors()) {
         Surface(modifier = Modifier.fillMaxSize()) {
-            Column {
-                MainScreenButton(
-                    title = "Play!",
-                    enabled = !play,
-                    onClick = {
-                        play = true
-                        GlobalScope.launch {
-                            pokerController.play()
+            Row {
+                Column(
+                    modifier = Modifier.width(500.dp)
+                ) {
+                    MainScreenButton(
+                        title = "Play!",
+                        enabled = !play,
+                        onClick = {
+                            play = true
+                            GlobalScope.launch {
+                                pokerController.play()
+                            }
                         }
+                    )
+                    Row {
+                        sharedCards(tableState)
+                        Text("pot: ${tableState.pot}")
                     }
-                )
-                Row {
-                    sharedCards(tableState)
-                    Text("pot: ${tableState.pot}")
+                    tableState.players.forEach {
+                        PlayerInfo(it)
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    BettingChoice(tableState.players)
                 }
-                tableState.players.forEach {
-                    PlayerInfo(it)
+                Column(
+                    modifier = Modifier.verticalScroll(
+                        state = scrollState,
+                        reverseScrolling = true
+                    )
+                ) {
+                    Text("${tableState.log}")
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                BettingChoice(tableState.players)
             }
         }
     }

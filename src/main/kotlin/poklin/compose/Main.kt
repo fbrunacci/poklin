@@ -6,7 +6,7 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.singleWindowApplication
 
 fun main() = singleWindowApplication(
-    title = "Poklin", state = WindowState(size = DpSize(800.dp, 800.dp))
+    title = "Poklin", state = WindowState(size = DpSize(1200.dp, 800.dp))
 ) {
     PokerGame()
 }

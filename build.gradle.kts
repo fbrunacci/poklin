@@ -20,6 +20,8 @@ kotlin {
 repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     mavenCentral()
+//    google()
+//    maven("https://jcenter.bintray.com")
 }
 dependencies {
     implementation(compose.desktop.currentOs)
@@ -27,6 +29,7 @@ dependencies {
     implementation("com.google.inject:guice:3.0")
     implementation("dev.misfitlabs.kotlinguice4:kotlin-guice:1.5.0")
     implementation("org.junit.jupiter:junit-jupiter:5.7.0")
+
     testImplementation(kotlin("test-junit"))
 }
 

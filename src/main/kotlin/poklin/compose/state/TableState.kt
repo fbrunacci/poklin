@@ -27,6 +27,8 @@ object TableState {
     var pot by mutableStateOf(0)
     val players = mutableStateListOf<PlayerState>()
 
+    var log by mutableStateOf("")
+
     var sharedCard1 by mutableStateOf("")
     var sharedCard2 by mutableStateOf("")
     var sharedCard3 by mutableStateOf("")
