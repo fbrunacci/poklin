@@ -2,8 +2,10 @@ package poklin.compose
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -112,14 +114,23 @@ fun sharedCards(tableState: TableState) {
 fun PlayerInfo(
     playerState: PlayerState
 ) {
-    Column {
+    Column(
+        Modifier.background(
+            color = if (playerState.waitForDecision) {
+                MaterialTheme.colors.primary
+            } else {
+                MaterialTheme.colors.background
+            },
+            shape = RoundedCornerShape(20)
+        )
+    ) {
         Row {
             Text(
                 playerState.name,
                 modifier = Modifier.width(120.dp)
             )
             Text(
-                "money:" + playerState.money,
+                "money:${playerState.money}",
                 modifier = Modifier.width(100.dp)
             )
             Text(

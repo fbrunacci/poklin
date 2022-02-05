@@ -8,20 +8,20 @@ import javax.inject.Inject
 
 class PokerController @Inject constructor(
     private val gameController: GameController,
-    private val logger: ILogger, private val gameProperties: GameProperties
+    private val gameProperties: GameProperties,
+    private val logger: ILogger
 ) {
+
     val tableState = TableState
 
     init {
         gameProperties.players.forEach { tableState.playersState.add(it.playerState) }
     }
 
-    private val games = Games(gameProperties.players)
     fun play() {
         var i = 0
         while (gameProperties.nbPlayersWithMoney > 1) {
-            gameController.play(games)
-            games.setNextDealer()
+            gameController.play()
             i++
         }
         printFinalStats()
@@ -30,8 +30,8 @@ class PokerController @Inject constructor(
     fun play(numberOfHands : Int) {
         var i = 0
         while (i < numberOfHands && gameProperties.nbPlayersWithMoney > 1) {
-            gameController.play(games)
-            games.setNextDealer()
+            gameController.play()
+//            games.setNextDealer()
             i++
         }
         printFinalStats()
@@ -41,8 +41,8 @@ class PokerController @Inject constructor(
         logger.log("-----------------------------------------")
         logger.log("Statistics")
         logger.log("-----------------------------------------")
-        logger.log("Number of hands played: " + games.gamesCount())
-        for (player in games.players) {
+//        logger.log("Number of hands played: " + games.gamesCount())
+        for (player in gameProperties.players) {
             logger.log(
                 player.info() + " - " + player.playerController.toString().padEnd(8) + " : " + player
                     .money + "$"

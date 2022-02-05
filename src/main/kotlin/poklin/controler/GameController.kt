@@ -17,10 +17,11 @@ open class GameController @Inject constructor(
     private val statisticsController: StatisticsController,
     private val handStrengthEvaluator: HandStrengthEvaluator,
 ) {
-    fun play(games: Games) {
+
+    fun play() {
         TableState.newGame()
-        val game = createGame(games)
-        logGame(games, game)
+        val game = createGame()
+        logGame(game)
         play(game)
     }
 
@@ -33,9 +34,9 @@ open class GameController @Inject constructor(
         showDown(game)
     }
 
-    private fun logGame(games: Games, game: Game) {
+    private fun logGame(game: Game) {
         logger.log("-----------------------------------------")
-        logger.logImportant("Game Hand #" + (games.gamesCount() + 1))
+//        logger.logImportant("Game Hand #" + (games.gamesCount() + 1))
         logger.log("-----------------------------------------")
         val iterator: Iterator<Player> = game.table.players.iterator()
         while (iterator.hasNext()) {
@@ -45,14 +46,13 @@ open class GameController @Inject constructor(
         logger.log("-----------------------------------------")
     }
 
-    private fun createGame(games: Games): Game {
+    private fun createGame(): Game {
         val game = Game(
-            games.players,
+            gameProperties.players,
             gameProperties.smallBlind,
             gameProperties.bigBlind,
             Deck()
         )
-        games.addGame(game)
         return game
     }
 
