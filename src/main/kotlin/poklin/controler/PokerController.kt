@@ -3,12 +3,19 @@ package poklin.controler
 import poklin.utils.ILogger
 import poklin.GameProperties
 import poklin.Games
+import poklin.compose.state.TableState
 import javax.inject.Inject
 
 class PokerController @Inject constructor(
     private val gameController: GameController,
     private val logger: ILogger, private val gameProperties: GameProperties
 ) {
+    val tableState = TableState
+
+    init {
+        gameProperties.players.forEach { tableState.playersState.add(it.playerState) }
+    }
+
     private val games = Games(gameProperties.players)
     fun play() {
         var i = 0

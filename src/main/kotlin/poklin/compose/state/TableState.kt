@@ -15,7 +15,7 @@ object TableState {
         sharedCard3 = ""
         sharedCard4 = ""
         sharedCard5 = ""
-        players.forEach { player ->
+        playersState.forEach { player ->
             player.moneyPutInPot = 0
             player.bettingDecision = NONE
             player.bettingAmount = 0
@@ -25,7 +25,7 @@ object TableState {
     }
 
     var pot by mutableStateOf(0)
-    val players = mutableStateListOf<PlayerState>()
+    val playersState = mutableStateListOf<PlayerState>()
 
     var log by mutableStateOf("")
 
@@ -36,6 +36,6 @@ object TableState {
     var sharedCard5 by mutableStateOf("")
 
     fun playerStateAtSeat(seat: Int): PlayerState {
-        return players.first { playerState -> playerState.seat == seat }
+        return playersState.first { playerState -> playerState.seat == seat }
     }
 }

@@ -8,12 +8,13 @@ import poklin.model.bet.BettingDecision
 import poklin.model.bet.BettingDecision.BettingAction.*
 import poklin.model.cards.Card
 
-class AskPlayerController(val playerState: PlayerState) : PlayerController() {
+class AskPlayerController() : PlayerController() {
     override fun toString(): String {
         return "ask"
     }
 
     override fun decide(player: Player, currentGame: Game, cards: List<Card>): BettingDecision {
+        val playerState = player.playerState!!
         playerState.bettingDecision = NONE
         playerState.canCheck = currentGame.canCheck(player)
         // TODO

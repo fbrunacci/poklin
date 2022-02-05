@@ -32,28 +32,19 @@ import poklin.utils.TableStateLogger
 
 @Composable
 fun PokerGame() {
-    var play by mutableStateOf(false)
-    val tableState = remember { TableState }
-    val playerState1 = PlayerState("Marcel", 1)
-    val playerState2 = PlayerState("Paul", 2)
-    tableState.players.add(playerState1)
-    tableState.players.add(playerState2)
-
     val gameProperties = GameProperties(15, 20, 10)
     gameProperties.addPlayer(
         Player(
             1,
             1000,
-            AskPlayerController(playerState1),
-            playerState1
+            AskPlayerController()
         )
     ) // AskPlayerController
     gameProperties.addPlayer(
         Player(
             2,
             1000,
-            AskPlayerController(playerState2), // PlayerControllerNormal(),
-            playerState2
+            AskPlayerController() // PlayerControllerNormal()
         )
     )
 
@@ -64,11 +55,11 @@ fun PokerGame() {
         }
     })
     val pokerController = injector.getInstance(PokerController::class.java)
-    var i = 0
+
+    var play by mutableStateOf(false)
+    val tableState = remember { pokerController.tableState }
 
     val scrollState = rememberScrollState()
-
-    // https://github.com/ecc-weizhi/on-screen-log ?
     MaterialTheme(colors = darkColors()) {
         Surface(modifier = Modifier.fillMaxSize()) {
             Row {
@@ -89,11 +80,11 @@ fun PokerGame() {
                         sharedCards(tableState)
                         Text("pot: ${tableState.pot}")
                     }
-                    tableState.players.forEach {
+                    tableState.playersState.forEach {
                         PlayerInfo(it)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                    BettingChoice(tableState.players)
+                    BettingChoice(tableState.playersState)
                 }
                 Column(
                     modifier = Modifier.verticalScroll(

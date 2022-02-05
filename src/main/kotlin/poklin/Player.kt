@@ -1,12 +1,14 @@
 package poklin
 
-import poklin.controler.PlayerController
 import poklin.compose.state.PlayerState
+import poklin.controler.PlayerController
 import poklin.model.bet.BettingDecision
 import poklin.model.cards.Card
 import java.util.*
 
-class Player(val seat: Int, money: Int, val playerController: PlayerController, val playerState: PlayerState? = null) {
+class Player(val seat: Int, money: Int, val playerController: PlayerController) {
+
+    val playerState = PlayerState("Player${seat}", seat)
 
     var money: Int = money
         get() = field

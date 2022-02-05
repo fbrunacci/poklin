@@ -9,7 +9,7 @@ class Pot {
 
     fun contributePot(amount: Int, player: Player) {
         TableState.pot += amount
-        TableState.playerStateAtSeat(player.seat)?.moneyPutInPot += amount
+        player.playerState.moneyPutInPot += amount
 
         if (!playerContribution.containsKey(player)) {
             playerContribution[player] = amount
