@@ -19,7 +19,17 @@ class PokerController @Inject constructor(
     private val games = Games(gameProperties.players)
     fun play() {
         var i = 0
-        while (i < gameProperties.numberOfHands && gameProperties.nbPlayersWithMoney > 1) {
+        while (gameProperties.nbPlayersWithMoney > 1) {
+            gameController.play(games)
+            games.setNextDealer()
+            i++
+        }
+        printFinalStats()
+    }
+
+    fun play(numberOfHands : Int) {
+        var i = 0
+        while (i < numberOfHands && gameProperties.nbPlayersWithMoney > 1) {
             gameController.play(games)
             games.setNextDealer()
             i++

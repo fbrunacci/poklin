@@ -3,7 +3,6 @@ package poklin
 import java.util.*
 
 open class GameProperties(
-    val numberOfHands: Int,
     val bigBlind: Int,
     val smallBlind: Int
 ) {

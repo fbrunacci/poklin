@@ -23,7 +23,7 @@ class PlayRoundTest {
             bind<ILogger>().to<ConsoleLogger>().`in`<Singleton>()
         }
 
-        class TestGameProperties : GameProperties(15, 20, 10) {
+        class TestGameProperties : GameProperties(20, 10) {
             val player1Controller = PlayerControllerBettingDecisionFifo()
             val player2Controller = PlayerControllerBettingDecisionFifo()
 
