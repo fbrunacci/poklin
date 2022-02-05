@@ -34,7 +34,7 @@ class AskPlayerController(val playerState: PlayerState) : PlayerController() {
         return when (playerState.bettingDecision) {
             CHECK -> BettingDecision.CHECK
             CALL -> BettingDecision.CALL
-            RAISE -> BettingDecision.RAISE_MIN
+            RAISE -> BettingDecision.RAISE_CUSTOM(playerState.bettingAmount)
             else -> BettingDecision.FOLD
         }
     }

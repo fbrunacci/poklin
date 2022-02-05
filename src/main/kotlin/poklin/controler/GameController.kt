@@ -99,7 +99,7 @@ open class GameController @Inject constructor(
     }
 
     private fun applyDecision(game: Game, player: Player, bettingDecision: BettingDecision) {
-        TableState.playerStateAtSeat(player.seat).bettingDecision = bettingDecision.bettingAction
+        TableState.playerStateAtSeat(player.seat)?.bettingDecision = bettingDecision.bettingAction
         val handStrength = handStrengthEvaluator.evaluate(
             player!!.holeCards, game.sharedCards,
             game.table.getActivePlayers().size

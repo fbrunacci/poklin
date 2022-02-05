@@ -8,6 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -189,52 +190,68 @@ fun BettingChoice(playerStates: SnapshotStateList<PlayerState>) {
 
 @Composable
 fun BettingChoiceButton(playerState: PlayerState) {
-    Row {
-        Text(
-            "" + playerState.seat + ":",
-            modifier = Modifier.width(20.dp)
-        )
-        Text(
-            playerState.name,
-            modifier = Modifier.width(120.dp)
-        )
-        BetButton(
-            text = "Fold",
-            onClick = {
-                playerState.bettingDecision = BettingDecision.BettingAction.FOLD
-                playerState.waitForDecision = false
+    Column {
+        Row {
+            Text(
+                "" + playerState.seat + ":",
+                modifier = Modifier.width(20.dp)
+            )
+            Text(
+                playerState.name,
+                modifier = Modifier.width(120.dp)
+            )
+            BetButton(
+                text = "Fold",
+                onClick = {
+                    playerState.bettingDecision = BettingDecision.BettingAction.FOLD
+                    playerState.waitForDecision = false
+                }
+            )
+            if (playerState.canCheck) {
+                BetButton(
+                    text = "Check",
+                    onClick = {
+                        playerState.bettingDecision = BettingDecision.BettingAction.CHECK
+                        playerState.waitForDecision = false
+                    })
+            } else {
+                BetButton(
+                    text = "Call",
+                    onClick = {
+                        playerState.bettingDecision = BettingDecision.BettingAction.CALL
+                        playerState.waitForDecision = false
+                    })
             }
-        )
-        if (playerState.canCheck) {
-            BetButton(
-                text = "Check",
-                onClick = {
-                    playerState.bettingDecision = BettingDecision.BettingAction.CHECK
-                    playerState.waitForDecision = false
-                })
-        } else {
-            BetButton(
-                text = "Call",
-                onClick = {
-                    playerState.bettingDecision = BettingDecision.BettingAction.CALL
-                    playerState.waitForDecision = false
-                })
         }
-        BetButton(
-            text = "Rmin",
-            onClick = {
-                playerState.bettingDecision = BettingDecision.BettingAction.RAISE
-                playerState.bettingAmount = 20
-                playerState.waitForDecision = false
-            })
-        /*
-        var sliderState by remember { mutableStateOf(0f) }
-        Slider(value = sliderState, modifier = Modifier.fillMaxWidth().padding(8.dp),
-            onValueChange = { newValue ->
-                sliderState = newValue
-            }
-        )
-        */
+        Row {
+            BetButton(
+                text = "Rmin",
+                onClick = {
+                    playerState.bettingDecision = BettingDecision.BettingAction.RAISE
+                    playerState.bettingAmount = 20
+                    playerState.waitForDecision = false
+                })
+            var sliderBettingState by remember { mutableStateOf(20f) }
+            BetButton(
+                text = "Bet",
+                onClick = {
+                    playerState.bettingDecision = BettingDecision.BettingAction.RAISE
+                    playerState.bettingAmount = sliderBettingState.toInt()
+                    playerState.waitForDecision = false
+                })
+            Text(
+                text = "${sliderBettingState.toInt()}$",
+                modifier = Modifier.width(60.dp).align(alignment = Alignment.CenterVertically)
+            )
+            Slider(value = sliderBettingState, modifier = Modifier.fillMaxWidth().padding(8.dp),
+                valueRange = playerState.minBettingAmount.toFloat()..playerState.money.toFloat(),
+                steps = 100,
+                colors = SliderDefaults.colors(thumbColor = MaterialTheme.colors.secondary),
+                onValueChange = { newValue ->
+                    sliderBettingState = newValue
+                }
+            )
+        }
     }
 }
 

@@ -5,6 +5,10 @@ import java.util.*
 class Games(val players: LinkedList<Player>) {
     private val games: MutableList<Game> = ArrayList()
 
+    init {
+
+    }
+
     fun setNextDealer() {
         val formerDealer = players.removeAt(0)
         players.add(formerDealer)
