@@ -49,6 +49,13 @@ fun PokerGame() {
             AskPlayerController() // PlayerControllerNormal()
         )
     )
+    gameProperties.addPlayer(
+        Player(
+            3,
+            1000,
+            AskPlayerController() // PlayerControllerNormal()
+        )
+    )
 
     var injector = Guice.createInjector(TexasModule(), object : KotlinModule() {
         override fun configure() {
@@ -87,14 +94,15 @@ fun PokerGame() {
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     BettingChoice(tableState.playersState)
-                }
-                Column(
-                    modifier = Modifier.verticalScroll(
-                        state = scrollState,
-                        reverseScrolling = true
-                    )
-                ) {
-                    Text("${tableState.log}")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Column(
+                        modifier = Modifier.verticalScroll(
+                            state = scrollState,
+                            reverseScrolling = true
+                        )
+                    ) {
+                        Text("${tableState.log}")
+                    }
                 }
             }
         }
@@ -194,14 +202,14 @@ fun BettingChoice(playerStates: SnapshotStateList<PlayerState>) {
 fun BettingChoiceButton(playerState: PlayerState) {
     Column {
         Row {
-            Text(
-                "" + playerState.seat + ":",
-                modifier = Modifier.width(20.dp)
-            )
-            Text(
-                playerState.name,
-                modifier = Modifier.width(120.dp)
-            )
+//            Text(
+//                "" + playerState.seat + ":",
+//                modifier = Modifier.width(20.dp)
+//            )
+//            Text(
+//                playerState.name,
+//                modifier = Modifier.width(120.dp)
+//            )
             BetButton(
                 text = "Fold",
                 onClick = {
@@ -233,24 +241,23 @@ fun BettingChoiceButton(playerState: PlayerState) {
                     playerState.bettingAmount = 20
                     playerState.waitForDecision = false
                 })
-            var sliderBettingState by remember { mutableStateOf(20f) }
             BetButton(
                 text = "Bet",
                 onClick = {
                     playerState.bettingDecision = BettingDecision.BettingAction.RAISE
-                    playerState.bettingAmount = sliderBettingState.toInt()
+                    playerState.bettingAmount = playerState.sliderBettingState.toInt()
                     playerState.waitForDecision = false
                 })
             Text(
-                text = "${sliderBettingState.toInt()}$",
+                text = "${playerState.sliderBettingState.toInt()}$",
                 modifier = Modifier.width(60.dp).align(alignment = Alignment.CenterVertically)
             )
-            Slider(value = sliderBettingState, modifier = Modifier.fillMaxWidth().padding(8.dp),
+            Slider(value = playerState.sliderBettingState, modifier = Modifier.fillMaxWidth().padding(8.dp),
                 valueRange = playerState.minBettingAmount.toFloat()..playerState.money.toFloat(),
                 steps = 100,
                 colors = SliderDefaults.colors(thumbColor = MaterialTheme.colors.secondary),
                 onValueChange = { newValue ->
-                    sliderBettingState = newValue
+                    playerState.sliderBettingState = newValue
                 }
             )
         }

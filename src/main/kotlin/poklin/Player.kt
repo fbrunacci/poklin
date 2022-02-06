@@ -10,11 +10,15 @@ class Player(val seat: Int, money: Int, val playerController: PlayerController) 
 
     val playerState = PlayerState("Player${seat}", seat)
 
+    init {
+        playerState.money = money
+    }
+
     var money: Int = money
         get() = field
         set(value) {
             field = value
-            playerState?.money = field
+            playerState.money = field
         }
 
     var holeCards: List<Card>? = null

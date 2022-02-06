@@ -21,6 +21,7 @@ class AskPlayerController() : PlayerController() {
         // playerState.canCheck = true/false
         // playerState.minBet = xxx
         // playerState.maxBet = xxx
+        playerState.sliderBettingState = 20f
         playerState.waitForDecision = true // active l'affichage du choix
 
 //        println("AskPlayerController waitForDecision " + Thread.currentThread().name.toString())

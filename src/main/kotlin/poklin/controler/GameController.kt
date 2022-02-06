@@ -19,10 +19,11 @@ open class GameController @Inject constructor(
 ) {
 
     fun play() {
-        TableState.newGame()
         val game = createGame()
         logGame(game)
         play(game)
+        // TODO dealer.next()
+        // TODO add / remove player
     }
 
     fun play(game: Game) {
@@ -53,6 +54,7 @@ open class GameController @Inject constructor(
             gameProperties.bigBlind,
             Deck()
         )
+        TableState.newGame()
         return game
     }
 
