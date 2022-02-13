@@ -101,9 +101,9 @@ open class GameController @Inject constructor(
     }
 
     private fun applyDecision(game: Game, player: Player, bettingDecision: BettingDecision) {
-        TableState.playerStateAtSeat(player.seat)?.bettingDecision = bettingDecision.bettingAction
+        player.playerState.bettingDecision = bettingDecision.bettingAction
         val handStrength = handStrengthEvaluator.evaluate(
-            player!!.holeCards, game.sharedCards,
+            player.holeCards, game.sharedCards,
             game.table.getActivePlayers().size
         )
         game.applyDecision(player, bettingDecision, gameProperties, handStrength)
@@ -112,7 +112,6 @@ open class GameController @Inject constructor(
             player.toString() + ": " + bettingDecision + " "
                     + bettingRound.getBetForPlayer(player) + "$"
         )
-        DD++
     }
 
     private fun getWinnersByHandPower(game: Game): Map<Int, List<Player>> {
@@ -245,9 +244,5 @@ open class GameController @Inject constructor(
         }
         winnerText.append('.')
         logger.log(winnerText.toString())
-    }
-
-    companion object {
-        var DD = 0
     }
 }

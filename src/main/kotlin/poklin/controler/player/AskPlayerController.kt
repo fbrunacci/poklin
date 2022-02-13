@@ -23,12 +23,15 @@ class AskPlayerController() : PlayerController() {
         // playerState.maxBet = xxx
         playerState.sliderBettingState = 20f
         playerState.waitForDecision = true // active l'affichage du choix
+        playerState.progress = 1.0f
 
 //        println("AskPlayerController waitForDecision " + Thread.currentThread().name.toString())
-        var waitTime = 10000
+        val totalWaitTime = 10000
+        var waitTime = totalWaitTime
         while (waitTime > 0 && playerState.waitForDecision) {
             Thread.sleep(500)
             waitTime -= 500
+            playerState.progress = (waitTime.toFloat() / totalWaitTime.toFloat())
         }
         playerState.waitForDecision = false
 

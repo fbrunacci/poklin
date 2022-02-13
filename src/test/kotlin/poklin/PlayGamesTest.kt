@@ -40,7 +40,6 @@ internal class PlayGamesTest {
 
     @Test
     fun play10Round() {
-        GameController.DD = 0
         for (i in 1..10) {
             val pokerController = injector.getInstance(PokerController::class.java)
             pokerController.play(15)

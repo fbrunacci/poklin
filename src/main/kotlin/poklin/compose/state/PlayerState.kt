@@ -23,4 +23,5 @@ class PlayerState(val name: String, val seat: Int) {
     var card2 by mutableStateOf("")
 
     var waitForDecision by mutableStateOf(false)
+    var progress by mutableStateOf(0.0f)
 }
