@@ -11,10 +11,10 @@ import poklin.opponentmodeling.ContextAction
 import poklin.opponentmodeling.ContextInformation
 import java.util.*
 
-open class Game(val players: LinkedList<Player>, val smallBlind: Int, val bigBlind: Int, val deck: IDeck = Deck()) {
+open class Game(val players: LinkedList<Player>, val smallBlind: Int, val bigBlind: Int, val deck: IDeck = Deck(), dealerSeat: Int) {
 
     val pot: Pot = Pot()
-    val table = Table(6, players)
+    val table = Table(6, players, dealerSeat)
     val sharedCards: MutableList<Card> = ArrayList()
     private val bettingRounds: MutableList<BettingRound> = ArrayList()
 

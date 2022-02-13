@@ -1,18 +1,14 @@
 package poklin.compose
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.inject.Guice
@@ -22,40 +18,23 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import poklin.GameProperties
 import poklin.Player
+import poklin.compose.composable.NormalCards
+import poklin.compose.composable.PlayerInfo
 import poklin.compose.state.PlayerState
 import poklin.compose.state.TableState
 import poklin.controler.PokerController
 import poklin.controler.player.AskPlayerController
 import poklin.dependencyinjection.TexasModule
 import poklin.model.bet.BettingDecision
-import poklin.model.bet.BettingDecision.BettingAction.NONE
 import poklin.utils.ILogger
 import poklin.utils.TableStateLogger
 
 @Composable
 fun PokerGame() {
-    val gameProperties = GameProperties(20, 10)
-    gameProperties.addPlayer(
-        Player(
-            1,
-            1000,
-            AskPlayerController()
-        )
-    ) // AskPlayerController
-    gameProperties.addPlayer(
-        Player(
-            2,
-            1000,
-            AskPlayerController() // PlayerControllerNormal()
-        )
-    )
-    gameProperties.addPlayer(
-        Player(
-            3,
-            1000,
-            AskPlayerController() // PlayerControllerNormal()
-        )
-    )
+    val gameProperties = GameProperties(20, 10, 1)
+    gameProperties.addPlayer(Player(1, 1000, AskPlayerController()))
+    gameProperties.addPlayer(Player(2, 1000, AskPlayerController()))
+    gameProperties.addPlayer(Player(3, 1000, AskPlayerController()))
 
     var injector = Guice.createInjector(TexasModule(), object : KotlinModule() {
         override fun configure() {
@@ -67,8 +46,8 @@ fun PokerGame() {
 
     var play by mutableStateOf(false)
     val tableState = remember { pokerController.tableState }
+    val logScrollState = rememberScrollState()
 
-    val scrollState = rememberScrollState()
     MaterialTheme(colors = darkColors()) {
         Surface(modifier = Modifier.fillMaxSize()) {
             Row {
@@ -95,14 +74,15 @@ fun PokerGame() {
                     Spacer(modifier = Modifier.height(8.dp))
                     BettingChoice(tableState.playersState)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Column(
-                        modifier = Modifier.verticalScroll(
-                            state = scrollState,
-                            reverseScrolling = true
-                        )
-                    ) {
-                        Text("${tableState.log}")
-                    }
+                }
+                Column(
+                    modifier = Modifier.verticalScroll(
+                        state = logScrollState,
+                        reverseScrolling = true
+                    )
+                )
+                {
+                    Text("${tableState.log}")
                 }
             }
         }
@@ -119,77 +99,6 @@ fun sharedCards(tableState: TableState) {
 }
 
 @Composable
-fun PlayerInfo(
-    playerState: PlayerState
-) {
-    Column(
-        Modifier.background(
-            color = if (playerState.waitForDecision) {
-                MaterialTheme.colors.primary
-            } else {
-                MaterialTheme.colors.background
-            },
-            shape = RoundedCornerShape(20)
-        )
-    ) {
-        Row {
-            Text(
-                playerState.name,
-                modifier = Modifier.width(120.dp)
-            )
-            Text(
-                "money:${playerState.money}",
-                modifier = Modifier.width(100.dp)
-            )
-            Text(
-                "/ (pot:${playerState.moneyPutInPot})",
-                modifier = Modifier.width(100.dp)
-            )
-            if (playerState.bettingDecision != NONE) {
-                Text(
-                    "Dec:${playerState.bettingDecision}",
-                    modifier = Modifier.width(100.dp)
-                )
-            }
-        }
-        Row {
-            Row {
-                MiniCards(playerState.card1)
-                MiniCards(playerState.card2)
-            }
-        }
-    }
-}
-
-@Composable
-fun MiniCards(card: String) {
-    Cards("minicards", card, Modifier.width(20.dp).height(30.dp).padding(1.dp))
-}
-
-@Composable
-fun NormalCards(card: String) {
-    Cards("cards", card, Modifier.width(60.dp).height(90.dp).padding(1.dp))
-}
-
-
-@Composable
-fun Cards(folder: String, card: String, modifier: Modifier = Modifier) {
-    if (card.isEmpty()) {
-        Image(
-            painter = painterResource("${folder}/back.png"),
-            modifier = modifier,
-            contentDescription = "$card"
-        )
-    } else {
-        Image(
-            painter = painterResource("${folder}/${card}.png"),
-            modifier = modifier,
-            contentDescription = "$card"
-        )
-    }
-}
-
-@Composable
 fun BettingChoice(playerStates: SnapshotStateList<PlayerState>) {
     playerStates.forEach { playerState ->
         if (playerState.waitForDecision) {
@@ -202,14 +111,6 @@ fun BettingChoice(playerStates: SnapshotStateList<PlayerState>) {
 fun BettingChoiceButton(playerState: PlayerState) {
     Column {
         Row {
-//            Text(
-//                "" + playerState.seat + ":",
-//                modifier = Modifier.width(20.dp)
-//            )
-//            Text(
-//                playerState.name,
-//                modifier = Modifier.width(120.dp)
-//            )
             BetButton(
                 text = "Fold",
                 onClick = {

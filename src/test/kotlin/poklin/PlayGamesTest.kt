@@ -14,7 +14,7 @@ import poklin.dependencyinjection.TexasModule
 import poklin.utils.ConsoleLogger
 import poklin.utils.ILogger
 
-class PlayGamesTest {
+internal class PlayGamesTest {
 
     lateinit var injector: Injector
     lateinit var gameProperties: GameProperties
@@ -22,7 +22,7 @@ class PlayGamesTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        gameProperties = GameProperties( 20, 10)
+        gameProperties = GameProperties( 20, 10, 1)
         with(gameProperties) {
             addPlayer(Player(1, 1000, PlayerControllerBluff()))
             addPlayer(Player(2, 1000, PlayerControllerBluff()))

@@ -5,11 +5,10 @@ import org.junit.Before
 import org.junit.Test
 import poklin.controler.player.PlayerControllerNormal
 import poklin.model.bet.BettingDecision.BettingAction.RAISE
-import java.lang.Exception
 import java.util.*
 
-class BettingRoundTest {
-    val players: LinkedList<Player> = LinkedList<Player>()
+internal class BettingRoundTest {
+    private val players: LinkedList<Player> = LinkedList<Player>()
 
     @Before
     @Throws(Exception::class)
@@ -21,14 +20,14 @@ class BettingRoundTest {
 
     @Test
     fun testPlayerCanBetWhenRoundStart() {
-        val game = Game(players, 10, 20)
+        val game = Game(players, 10, 20, dealerSeat = 1)
         val bettingRound = BettingRound(game)
         Assert.assertTrue(bettingRound.playerCanBet())
     }
 
     @Test
     fun testPlayerCanBetWhenP2HasNoActionStart() {
-        val game = Game(players, 10, 20)
+        val game = Game(players, 10, 20, dealerSeat = 1)
         val bettingRound = BettingRound(game)
         bettingRound.placeBet(players.iterator().next(), RAISE, 10)
         Assert.assertTrue(bettingRound.playerCanBet())

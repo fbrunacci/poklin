@@ -16,7 +16,7 @@ fun main(args : Array<String>) {
 class PlayVs {
 
     fun playVsRound() {
-        val gameProperties = GameProperties(20, 10)
+        val gameProperties = GameProperties(20, 10, 1)
         gameProperties.addPlayer(Player(1, 1000, PlayerControllerBluff()))
         gameProperties.addPlayer(Player(2, 1000, PlayerControllerBluff()))
         var injector = Guice.createInjector(TexasModule(), object : KotlinModule() {

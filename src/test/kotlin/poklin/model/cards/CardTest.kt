@@ -1,13 +1,12 @@
 package poklin.model.cards
 
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
-
-import poklin.model.cards.CardNumber.*
+import poklin.model.cards.CardNumber.ACE
+import poklin.model.cards.CardNumber.TEN
 import poklin.model.cards.CardSuit.*
 
-class CardTest {
+internal class CardTest {
 
     @Test
     fun toText() {
@@ -25,6 +24,9 @@ class CardTest {
 
     @Test
     fun fromCardsText() {
-        assertEquals(listOf(Card(DIAMOND, ACE),Card(SPADE, ACE),Card(CLUB, ACE),Card(HEART, ACE)), Cards.fromText("Ad As Ac Ah"))
+        assertEquals(
+            listOf(Card(DIAMOND, ACE), Card(SPADE, ACE), Card(CLUB, ACE), Card(HEART, ACE)),
+            Cards.fromText("Ad As Ac Ah")
+        )
     }
 }

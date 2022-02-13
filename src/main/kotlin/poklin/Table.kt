@@ -2,7 +2,7 @@ package poklin
 
 import java.util.*
 
-class Table(val maxSeats: Int, players: List<Player>, var dealerSeat: Int = 1) {
+class Table(val maxSeats: Int, players: List<Player>, private val dealerSeat: Int = 1) {
 
     var currentPlayerSeat = -1
     var playersMap: MutableMap<Int, Player> = HashMap()

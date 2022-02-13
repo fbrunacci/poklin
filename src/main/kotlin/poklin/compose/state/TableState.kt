@@ -4,23 +4,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import poklin.GameProperties
 import poklin.model.bet.BettingDecision.BettingAction.NONE
 
 object TableState {
 
-    fun newGame() {
+    fun newGame(gameProperties: GameProperties) {
         pot = 0
         sharedCard1 = ""
         sharedCard2 = ""
         sharedCard3 = ""
         sharedCard4 = ""
         sharedCard5 = ""
-        playersState.forEach { player ->
-            player.moneyPutInPot = 0
-            player.bettingDecision = NONE
-            player.bettingAmount = 0
-            player.card1 = ""
-            player.card2 = ""
+        playersState.forEach { state ->
+            state.moneyPutInPot = 0
+            state.bettingDecision = NONE
+            state.bettingAmount = 0
+            state.card1 = ""
+            state.card2 = ""
+            state.dealer = gameProperties.dealerSeat == state.seat
         }
     }
 

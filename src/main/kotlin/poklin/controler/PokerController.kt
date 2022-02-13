@@ -31,7 +31,6 @@ class PokerController @Inject constructor(
         var i = 0
         while (i < numberOfHands && gameProperties.nbPlayersWithMoney > 1) {
             gameController.play()
-//            games.setNextDealer()
             i++
         }
         printFinalStats()

@@ -19,11 +19,22 @@ open class GameController @Inject constructor(
 ) {
 
     fun play() {
+        TableState.newGame(gameProperties)
         val game = createGame()
         logGame(game)
         play(game)
-        // TODO dealer.next()
-        // TODO add / remove player
+        gameProperties.nextDealer()
+    }
+
+    private fun createGame(): Game {
+        val game = Game(
+            gameProperties.players,
+            gameProperties.smallBlind,
+            gameProperties.bigBlind,
+            Deck(),
+            gameProperties.dealerSeat
+        )
+        return game
     }
 
     fun play(game: Game) {
@@ -45,17 +56,6 @@ open class GameController @Inject constructor(
             logger.log(player.toString())
         }
         logger.log("-----------------------------------------")
-    }
-
-    private fun createGame(): Game {
-        val game = Game(
-            gameProperties.players,
-            gameProperties.smallBlind,
-            gameProperties.bigBlind,
-            Deck()
-        )
-        TableState.newGame()
-        return game
     }
 
     /**

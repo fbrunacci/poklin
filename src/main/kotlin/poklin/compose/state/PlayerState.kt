@@ -8,6 +8,8 @@ import poklin.model.bet.BettingDecision.BettingAction
 class PlayerState(val name: String, val seat: Int) {
     var money by mutableStateOf(0)
 
+    var dealer by mutableStateOf(false)
+
     var bettingDecision by mutableStateOf(BettingAction.NONE)
     var bettingAmount by mutableStateOf(0)
     var moneyPutInPot by mutableStateOf(0)
@@ -17,7 +19,6 @@ class PlayerState(val name: String, val seat: Int) {
 
     var canCheck by mutableStateOf(false)
 
-    val dealer by mutableStateOf(false)
     var card1 by mutableStateOf("")
     var card2 by mutableStateOf("")
 

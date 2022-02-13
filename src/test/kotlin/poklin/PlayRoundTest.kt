@@ -15,7 +15,7 @@ import poklin.model.cards.DeckFifo
 import poklin.utils.ConsoleLogger
 import poklin.utils.ILogger
 
-class PlayRoundTest {
+internal class PlayRoundTest {
 
     class TestGamePropertiesModule : KotlinModule() {
         override fun configure() {
@@ -23,7 +23,7 @@ class PlayRoundTest {
             bind<ILogger>().to<ConsoleLogger>().`in`<Singleton>()
         }
 
-        class TestGameProperties : GameProperties(20, 10) {
+        class TestGameProperties : GameProperties(20, 10, dealerSeat = 1) {
             val player1Controller = PlayerControllerBettingDecisionFifo()
             val player2Controller = PlayerControllerBettingDecisionFifo()
 
@@ -50,7 +50,7 @@ class PlayRoundTest {
 
     @Test
     fun playRound() {
-        val game = Game(testGameProperties.players, 10, 20)
+        val game = Game(testGameProperties.players, 10, 20, dealerSeat = 1)
         with(testGameProperties) {
             player2Controller.pushDecision(RAISE_CUSTOM(50))
             player1Controller.pushDecision(BettingDecision.CALL)
@@ -67,7 +67,7 @@ class PlayRoundTest {
 
     @Test
     fun playRoundS1() {
-        val game = Game(testGameProperties.players, 10, 20)
+        val game = Game(testGameProperties.players, 10, 20, dealerSeat = 1)
         with(testGameProperties) {
             player2Controller.pushDecision(RAISE_CUSTOM(50))
             player1Controller.pushDecision(BettingDecision.CALL)
@@ -79,7 +79,7 @@ class PlayRoundTest {
 
     @Test
     fun playRoundS2() {
-        val game = Game(testGameProperties.players, 10, 20)
+        val game = Game(testGameProperties.players, 10, 20, dealerSeat = 1)
         with(testGameProperties) {
             player2Controller.pushDecision(RAISE_CUSTOM(50))
             player1Controller.pushDecision(BettingDecision.CALL)
@@ -92,7 +92,7 @@ class PlayRoundTest {
 
     @Test
     fun playRoundS3() {
-        val game = Game(testGameProperties.players, 10, 20)
+        val game = Game(testGameProperties.players, 10, 20, dealerSeat = 1)
         with(testGameProperties) {
             player2Controller.pushDecision(RAISE_CUSTOM(50))
             player1Controller.pushDecision(BettingDecision.CALL)
@@ -122,7 +122,7 @@ class PlayRoundTest {
     @Test
     fun playGameS3() {
         val deckFifo = DeckFifo()
-        val game = Game(testGameProperties.players, 10, 20, deckFifo)
+        val game = Game(testGameProperties.players, 10, 20, deckFifo, dealerSeat = 1)
         Cards.fromText("As Ks Qs Js 10s 9s 8s 7s 6s 5s 4s 3s 2s")
             .forEach { card -> deckFifo.pushCardToTop(card) }
 
@@ -152,7 +152,7 @@ class PlayRoundTest {
 
     @Test
     fun playGameS4() {
-        val game = Game(testGameProperties.players, 10, 20)
+        val game = Game(testGameProperties.players, 10, 20, dealerSeat = 1)
         with(testGameProperties) {
             // preflop
             player2Controller.pushDecision(RAISE_CUSTOM(50))
@@ -174,7 +174,7 @@ class PlayRoundTest {
 
     @Test
     fun playGameSplitPot() {
-        val game = Game(testGameProperties.players, 10, 20)
+        val game = Game(testGameProperties.players, 10, 20, dealerSeat = 1)
         with(testGameProperties) {
             // preflop
             player2Controller.pushDecision(RAISE_CUSTOM(50))

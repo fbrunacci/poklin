@@ -6,7 +6,7 @@ import poklin.model.cards.CardNumber.*
 import poklin.model.cards.CardSuit.*
 import poklin.model.cards.Cards
 
-class HandPowerRankerTest {
+internal class HandPowerRankerTest {
 
     @Test
     fun testRank() {
