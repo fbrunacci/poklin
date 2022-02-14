@@ -40,4 +40,8 @@ object TableState {
     fun playerStateAtSeat(seat: Int): PlayerState {
         return playersState.first { playerState -> playerState.seat == seat }
     }
+
+    fun highestBet(): Int {
+        return playersState.maxOf { it.bettingAmount }
+    }
 }

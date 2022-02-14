@@ -1,7 +1,7 @@
 package poklin
 
 import poklin.compose.state.PlayerState
-import poklin.controler.PlayerController
+import poklin.controler.player.PlayerController
 import poklin.model.bet.BettingDecision
 import poklin.model.cards.Card
 import java.util.*

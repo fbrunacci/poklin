@@ -24,6 +24,7 @@ import poklin.compose.state.PlayerState
 import poklin.compose.state.TableState
 import poklin.controler.PokerController
 import poklin.controler.player.AskPlayerController
+import poklin.controler.player.PlayerControllerNormal
 import poklin.dependencyinjection.TexasModule
 import poklin.model.bet.BettingDecision
 import poklin.utils.ILogger
@@ -35,6 +36,7 @@ fun PokerGame() {
     gameProperties.addPlayer(Player(1, 1000, AskPlayerController()))
     gameProperties.addPlayer(Player(2, 1000, AskPlayerController()))
     gameProperties.addPlayer(Player(3, 1000, AskPlayerController()))
+//    gameProperties.addPlayer(Player(4, 1000, PlayerControllerNormal()))
 
     var injector = Guice.createInjector(TexasModule(), object : KotlinModule() {
         override fun configure() {
@@ -153,12 +155,12 @@ fun BettingChoiceButton(playerState: PlayerState) {
                 text = "${playerState.sliderBettingState.toInt()}$",
                 modifier = Modifier.width(60.dp).align(alignment = Alignment.CenterVertically)
             )
-            Slider(value = playerState.sliderBettingState, modifier = Modifier.fillMaxWidth().padding(8.dp),
+            Slider(value = playerState.sliderBettingState.toFloat(), modifier = Modifier.fillMaxWidth().padding(8.dp),
                 valueRange = playerState.minBettingAmount.toFloat()..playerState.money.toFloat(),
                 steps = 100,
                 colors = SliderDefaults.colors(thumbColor = MaterialTheme.colors.secondary),
                 onValueChange = { newValue ->
-                    playerState.sliderBettingState = newValue
+                    playerState.sliderBettingState = newValue.toInt()
                 }
             )
         }

@@ -15,7 +15,7 @@ class PlayerState(val name: String, val seat: Int) {
     var moneyPutInPot by mutableStateOf(0)
 
     var minBettingAmount by mutableStateOf(20)
-    var sliderBettingState by mutableStateOf(20f)
+    var sliderBettingState by mutableStateOf(20)
 
     var canCheck by mutableStateOf(false)
 

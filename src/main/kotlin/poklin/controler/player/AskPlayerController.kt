@@ -2,8 +2,6 @@ package poklin.controler.player
 
 import poklin.Game
 import poklin.Player
-import poklin.controler.PlayerController
-import poklin.compose.state.PlayerState
 import poklin.model.bet.BettingDecision
 import poklin.model.bet.BettingDecision.BettingAction.*
 import poklin.model.cards.Card
@@ -15,17 +13,7 @@ class AskPlayerController() : PlayerController() {
 
     override fun decide(player: Player, currentGame: Game, cards: List<Card>): BettingDecision {
         val playerState = player.playerState!!
-        playerState.bettingDecision = NONE
-        playerState.canCheck = currentGame.canCheck(player)
-        // TODO
-        // playerState.canCheck = true/false
-        // playerState.minBet = xxx
-        // playerState.maxBet = xxx
-        playerState.sliderBettingState = 20f
-        playerState.waitForDecision = true // active l'affichage du choix
-        playerState.progress = 1.0f
 
-//        println("AskPlayerController waitForDecision " + Thread.currentThread().name.toString())
         val totalWaitTime = 10000
         var waitTime = totalWaitTime
         while (waitTime > 0 && playerState.waitForDecision) {
@@ -33,9 +21,8 @@ class AskPlayerController() : PlayerController() {
             waitTime -= 500
             playerState.progress = (waitTime.toFloat() / totalWaitTime.toFloat())
         }
-        playerState.waitForDecision = false
 
-//        println("AskPlayerController wakeup " + Thread.currentThread().name.toString())
+
         return when (playerState.bettingDecision) {
             CHECK -> BettingDecision.CHECK
             CALL -> BettingDecision.CALL
