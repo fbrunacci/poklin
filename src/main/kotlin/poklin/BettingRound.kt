@@ -134,6 +134,11 @@ class BettingRound(private val game: Game) {
     fun playerCanBet(): Boolean {
         // tous les joueurs sauf 1 se sont couchés
         var playerInGame = 0
+
+        if( playersBet.values.any { p -> p.action == BIGBLIND  } ) {
+            return true;
+        }
+
         for ((key, value) in playersBet) {
             if (value.action !== BettingAction.FOLD && key.money > 0) {
                 playerInGame++

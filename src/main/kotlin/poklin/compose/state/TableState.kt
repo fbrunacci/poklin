@@ -42,6 +42,6 @@ object TableState {
     }
 
     fun highestBet(): Int {
-        return playersState.maxOf { it.bettingAmount }
+        return playersState.maxOfOrNull { it.bettingAmount }?:0
     }
 }

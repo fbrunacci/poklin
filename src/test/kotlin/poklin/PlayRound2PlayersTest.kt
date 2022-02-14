@@ -5,7 +5,8 @@ import com.google.inject.Singleton
 import dev.misfitlabs.kotlinguice4.KotlinModule
 import org.junit.Before
 import org.junit.Test
-import poklin.PlayRoundTest.TestGamePropertiesModule.TestGameProperties
+import poklin.PlayRound2PlayersTest.TestGamePropertiesModule.TestGameProperties
+import poklin.compose.state.TableState
 import poklin.controler.GameController
 import poklin.dependencyinjection.TexasModule
 import poklin.model.bet.BettingDecision
@@ -15,7 +16,7 @@ import poklin.model.cards.DeckFifo
 import poklin.utils.ConsoleLogger
 import poklin.utils.ILogger
 
-internal class PlayRoundTest {
+internal class PlayRound2PlayersTest {
 
     class TestGamePropertiesModule : KotlinModule() {
         override fun configure() {
@@ -50,7 +51,9 @@ internal class PlayRoundTest {
 
     @Test
     fun playRound() {
-        val game = Game(testGameProperties.players, 10, 20, dealerSeat = 1)
+        TableState.newGame(testGameProperties)
+        val game = gameController.createGame()
+
         with(testGameProperties) {
             player2Controller.pushDecision(RAISE_CUSTOM(50))
             player1Controller.pushDecision(BettingDecision.CALL)

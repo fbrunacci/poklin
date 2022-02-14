@@ -37,6 +37,7 @@ fun PokerGame() {
     gameProperties.addPlayer(Player(2, 1000, AskPlayerController()))
     gameProperties.addPlayer(Player(3, 1000, AskPlayerController()))
 //    gameProperties.addPlayer(Player(4, 1000, PlayerControllerNormal()))
+//    gameProperties.addPlayer(Player(5, 1000, PlayerControllerNormal()))
 
     var injector = Guice.createInjector(TexasModule(), object : KotlinModule() {
         override fun configure() {

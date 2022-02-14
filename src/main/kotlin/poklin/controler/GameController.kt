@@ -26,7 +26,7 @@ open class GameController @Inject constructor(
         gameProperties.nextDealer()
     }
 
-    private fun createGame(): Game {
+    fun createGame(): Game {
         val game = Game(
             gameProperties.players,
             gameProperties.smallBlind,
