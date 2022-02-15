@@ -132,35 +132,22 @@ class BettingRound(private val game: Game) {
      * @return
      */
     fun playerCanBet(): Boolean {
-        // tous les joueurs sauf 1 se sont couchés
-        var playerInGame = 0
-
-        if( playersBet.values.any { p -> p.action == BIGBLIND  } ) {
-            return true;
-        }
-
-        for ((key, value) in playersBet) {
-            if (value.action !== BettingAction.FOLD && key.money > 0) {
-                playerInGame++
-            }
-        }
+        // tous les joueurs sauf 1 se sont couchés (sauf si BIGBLIND)
+        val playerInGame = playersBet.filter { (key, value) -> value.action !== FOLD && key.money > 0 }.size
         if (playerInGame == 1) {
             return false
         }
 
-        // chaque joueur doit avoir pris au moins une decision
-        for (bet in playersBet.values) {
-            if (bet.action == NONE || bet.action == SMALLBLIND || bet.action == BIGBLIND) {
-                return true
-            }
+        if (playersBet.any { it.value.action == NONE || it.value.action == SMALLBLIND || it.value.action == BIGBLIND }) {
+            return true
         }
 
         // soit quand tous les joueurs qui ne se sont pas couchés et qui n'ont pas misé tout leur tapis
         // (donc ceux qui peuvent encore parler)
         // ont parlé et misé le même montant, qu'il soit nul ou non
         var previousBetAmount: Int? = null
-        for ((key, value) in playersBet) {
-            if (value.action !== BettingAction.FOLD && key.money > 0) {
+        playersBet.forEach { (key, value) ->
+            if (value.action !== FOLD && key.money > 0) {
                 if (previousBetAmount == null) {
                     previousBetAmount = value.amount
                 } else {
