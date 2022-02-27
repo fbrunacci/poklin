@@ -8,7 +8,6 @@ class Pot {
     private val playerContribution: MutableMap<Player, Int> = HashMap()
 
     fun contributePot(amount: Int, player: Player) {
-        TableState.pot += amount
         player.playerState.moneyPutInPot += amount
 
         if (!playerContribution.containsKey(player)) {

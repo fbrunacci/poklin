@@ -78,7 +78,9 @@ class BettingRound(private val game: Game) {
         //Logger.get().log("Player #" + player.getNumber() + " placeBet:" + bet);
         require(bet <= player.money) { "You can't bet more money that you own playerBet:" + previousBetAmount + " bet:" + bet + " player:" + player + " money:" + player.money }
         player.removeMoney(bet)
+        game.tableState.pot += bet
         game.pot.contributePot(bet, player)
+
         if (bet + previousBetAmount > highestBet) {
             highestBet = bet + previousBetAmount
         } else require(!(bet + previousBetAmount < highestBet && player.money != 0)) { "You can't bet less than the higher bet (bet:" + bet + " highestBet:" + highestBet + ") player:" + player + " money:" + player.money }

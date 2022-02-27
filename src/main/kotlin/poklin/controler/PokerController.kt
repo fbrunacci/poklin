@@ -9,10 +9,9 @@ import javax.inject.Inject
 class PokerController @Inject constructor(
     private val gameController: GameController,
     private val gameProperties: GameProperties,
-    private val logger: ILogger
+    private val logger: ILogger,
+    val tableState: TableState
 ) {
-
-    val tableState = TableState
 
     init {
         gameProperties.players.forEach { tableState.playersState.add(it.playerState) }

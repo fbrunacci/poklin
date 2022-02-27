@@ -11,7 +11,7 @@ import poklin.opponentmodeling.ContextAction
 import poklin.opponentmodeling.ContextInformation
 import java.util.*
 
-open class Game(val players: LinkedList<Player>, val smallBlind: Int, val bigBlind: Int, val deck: IDeck = Deck(), dealerSeat: Int) {
+open class Game(val tableState: TableState, val players: LinkedList<Player>, val smallBlind: Int, val bigBlind: Int, val deck: IDeck = Deck(), dealerSeat: Int) {
 
     val pot: Pot = Pot()
     val table = Table(6, players, dealerSeat)
@@ -65,18 +65,18 @@ open class Game(val players: LinkedList<Player>, val smallBlind: Int, val bigBli
         sharedCards.add(sharedCard1)
         sharedCards.add(sharedCard2)
         sharedCards.add(sharedCard3)
-        TableState.sharedCard1 = sharedCard1.toText()
-        TableState.sharedCard2 = sharedCard2.toText()
-        TableState.sharedCard3 = sharedCard3.toText()
+        tableState.sharedCard1 = sharedCard1.toText()
+        tableState.sharedCard2 = sharedCard2.toText()
+        tableState.sharedCard3 = sharedCard3.toText()
     }
 
     private fun dealSharedCard() {
         val sharedCard = deck.removeTopCard()
         sharedCards.add(sharedCard)
         if (bettingRoundName == BettingRoundName.POST_TURN) {
-            TableState.sharedCard4 = sharedCard.toText()
+            tableState.sharedCard4 = sharedCard.toText()
         } else {
-            TableState.sharedCard5 = sharedCard.toText()
+            tableState.sharedCard5 = sharedCard.toText()
         }
     }
 

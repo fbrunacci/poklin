@@ -4,12 +4,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.google.inject.Inject
 import poklin.GameProperties
 import poklin.model.bet.BettingDecision.BettingAction.NONE
 
-object TableState {
+class TableState @Inject constructor(
+    private val gameProperties: GameProperties
+) {
 
-    fun newGame(gameProperties: GameProperties) {
+    fun newGame() {
         pot = 0
         sharedCard1 = ""
         sharedCard2 = ""
@@ -22,6 +25,7 @@ object TableState {
             state.bettingAmount = 0
             state.card1 = ""
             state.card2 = ""
+            state.dealer = false
             state.dealer = gameProperties.dealerSeat == state.seat
         }
     }
@@ -42,6 +46,6 @@ object TableState {
     }
 
     fun highestBet(): Int {
-        return playersState.maxOfOrNull { it.bettingAmount }?:0
+        return playersState.maxOfOrNull { it.bettingAmount } ?: 0
     }
 }
