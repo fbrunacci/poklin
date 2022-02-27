@@ -1,8 +1,7 @@
-package poklin.dependencyinjection
+package poklin.controler.player
 
 import poklin.Game
 import poklin.Player
-import poklin.controler.player.PlayerController
 import poklin.model.bet.BettingDecision
 import poklin.model.bet.BettingRoundName
 import poklin.model.cards.Card

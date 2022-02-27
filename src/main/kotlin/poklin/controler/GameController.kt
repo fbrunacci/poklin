@@ -19,7 +19,6 @@ open class GameController @Inject constructor(
 ) {
 
     fun play() {
-        TableState.newGame(gameProperties)
         val game = createGame()
         logGame(game)
         play(game)
@@ -27,6 +26,7 @@ open class GameController @Inject constructor(
     }
 
     fun createGame(): Game {
+        TableState.newGame(gameProperties)
         val game = Game(
             gameProperties.players,
             gameProperties.smallBlind,

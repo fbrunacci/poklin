@@ -1,4 +1,4 @@
-package poklin.dependencyinjection
+package poklin.injection
 
 import com.google.inject.Singleton
 import dev.misfitlabs.kotlinguice4.KotlinModule

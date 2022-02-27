@@ -3,7 +3,6 @@ package poklin.controler.player
 import poklin.Game
 import poklin.Player
 import poklin.HandPowerRanker
-import poklin.dependencyinjection.AbstractPlayerController
 import poklin.model.HandPowerType
 import poklin.model.bet.BettingDecision
 import poklin.model.cards.Card

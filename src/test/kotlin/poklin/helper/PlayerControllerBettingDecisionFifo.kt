@@ -1,5 +1,7 @@
-package poklin
+package poklin.helper
 
+import poklin.Game
+import poklin.Player
 import poklin.controler.player.PlayerController
 import poklin.model.bet.BettingDecision
 import poklin.model.cards.Card

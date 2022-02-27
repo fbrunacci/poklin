@@ -1,57 +1,47 @@
 package poklin
 
 import com.google.inject.Guice
-import com.google.inject.Singleton
-import dev.misfitlabs.kotlinguice4.KotlinModule
+import com.google.inject.Inject
 import org.junit.Before
 import org.junit.Test
-import poklin.PlayRound2PlayersTest.TestGamePropertiesModule.TestGameProperties
-import poklin.compose.state.TableState
 import poklin.controler.GameController
-import poklin.dependencyinjection.TexasModule
+import poklin.helper.PlayerControllerBettingDecisionFifo
+import poklin.injection.ConsoleLoggerModule
+import poklin.injection.TexasModule
+import poklin.injection.toModule
 import poklin.model.bet.BettingDecision
 import poklin.model.bet.BettingDecision.Companion.RAISE_CUSTOM
 import poklin.model.cards.Cards
 import poklin.model.cards.DeckFifo
-import poklin.utils.ConsoleLogger
-import poklin.utils.ILogger
 
 internal class PlayRound2PlayersTest {
 
-    class TestGamePropertiesModule : KotlinModule() {
-        override fun configure() {
-            bind<GameProperties>().to<TestGameProperties>().`in`<Singleton>()
-            bind<ILogger>().to<ConsoleLogger>().`in`<Singleton>()
-        }
+    class TestGameProperties : GameProperties(20, 10, dealerSeat = 1) {
+        val player1Controller = PlayerControllerBettingDecisionFifo()
+        val player2Controller = PlayerControllerBettingDecisionFifo()
 
-        class TestGameProperties : GameProperties(20, 10, dealerSeat = 1) {
-            val player1Controller = PlayerControllerBettingDecisionFifo()
-            val player2Controller = PlayerControllerBettingDecisionFifo()
+        val player1 = Player(1, 1000, player1Controller)
+        val player2 = Player(2, 1000, player2Controller)
 
-            val player1 = Player(1, 1000, player1Controller)
-            val player2 = Player(2, 1000, player2Controller)
-
-            init {
-                addPlayer(player1)
-                addPlayer(player2)
-            }
+        init {
+            addPlayer(player1)
+            addPlayer(player2)
         }
     }
 
+    @Inject
     lateinit var gameController: GameController
-    lateinit var testGameProperties: TestGameProperties
+    val testGameProperties = TestGameProperties()
 
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        val injector = Guice.createInjector(TexasModule(), TestGamePropertiesModule())
-        gameController = injector.getInstance(GameController::class.java)
-        testGameProperties = injector.getInstance(GameProperties::class.java) as TestGameProperties
+        val injector = Guice.createInjector(TexasModule(), ConsoleLoggerModule(), testGameProperties.toModule())
+        injector.injectMembers(this)
     }
 
     @Test
     fun playRound() {
-        TableState.newGame(testGameProperties)
         val game = gameController.createGame()
 
         with(testGameProperties) {

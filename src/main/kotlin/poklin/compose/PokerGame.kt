@@ -24,8 +24,7 @@ import poklin.compose.state.PlayerState
 import poklin.compose.state.TableState
 import poklin.controler.PokerController
 import poklin.controler.player.AskPlayerController
-import poklin.controler.player.PlayerControllerNormal
-import poklin.dependencyinjection.TexasModule
+import poklin.injection.TexasModule
 import poklin.model.bet.BettingDecision
 import poklin.utils.ILogger
 import poklin.utils.TableStateLogger

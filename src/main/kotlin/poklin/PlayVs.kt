@@ -5,7 +5,7 @@ import com.google.inject.Singleton
 import dev.misfitlabs.kotlinguice4.KotlinModule
 import poklin.controler.PokerController
 import poklin.controler.player.PlayerControllerBluff
-import poklin.dependencyinjection.TexasModule
+import poklin.injection.TexasModule
 import poklin.utils.ConsoleLogger
 import poklin.utils.ILogger
 
