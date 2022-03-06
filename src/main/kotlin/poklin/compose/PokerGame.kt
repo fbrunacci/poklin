@@ -32,9 +32,9 @@ import poklin.utils.TableStateLogger
 @Composable
 fun PokerGame() {
     val gameProperties = GameProperties(20, 10, 1)
-    gameProperties.addPlayer(Player(1, 1000, AskPlayerController()))
-    gameProperties.addPlayer(Player(2, 1000, AskPlayerController()))
-    gameProperties.addPlayer(Player(3, 1000, AskPlayerController()))
+    gameProperties.addPlayer(Player(1, 1000, AskPlayerController(0)))
+    gameProperties.addPlayer(Player(2, 1000, AskPlayerController(0)))
+    gameProperties.addPlayer(Player(3, 1000, AskPlayerController(0)))
 //    gameProperties.addPlayer(Player(4, 1000, AskPlayerController()))
 //    gameProperties.addPlayer(Player(4, 1000, PlayerControllerNormal()))
 //    gameProperties.addPlayer(Player(5, 1000, PlayerControllerNormal()))
