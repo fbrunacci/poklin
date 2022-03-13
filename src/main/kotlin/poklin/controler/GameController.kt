@@ -27,7 +27,7 @@ open class GameController @Inject constructor(
     }
 
     fun createGame(): Game {
-        tableState.newGame()
+        tableState.newGame(gameProperties.dealerSeat)
         val game = Game(
             tableState,
             gameProperties.players,
@@ -184,7 +184,7 @@ open class GameController @Inject constructor(
     fun calculatePotDistribution(game: Game) {
         // Per rank (single or multiple winners), calculate pot distribution.
         val totalPot = game.pot.totalPot
-        val potDivision: MutableMap<Player, Int> = HashMap()
+        val potDivision: MutableMap<Player, Float> = HashMap()
         val activePlayers = game.table.getActivePlayers()
 
         // TODO start from after dealer for odds
@@ -233,7 +233,7 @@ open class GameController @Inject constructor(
 
         // Divide winnings.
         val winnerText = StringBuilder()
-        var totalWon = 0
+        var totalWon = 0f
         for (winner in potDivision.keys) {
             val potShare = potDivision[winner]!!
             //winner.win(potShare);
@@ -241,7 +241,7 @@ open class GameController @Inject constructor(
             if (winnerText.length > 0) {
                 winnerText.append(", ")
             }
-            winnerText.append(String.format("%s wins $ %d", winner, potShare))
+            winnerText.append(String.format("%s wins $ %f", winner, potShare))
             winner.addMoney(potShare)
         }
         winnerText.append('.')

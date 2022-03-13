@@ -1,6 +1,6 @@
 package poklin.model.bet
 
-class BettingDecision(val bettingAction: BettingAction, var raiseAmount: RaiseAmount? = null, var amount: Int? = null) {
+class BettingDecision(val bettingAction: BettingAction, var raiseAmount: RaiseAmount? = null, var amount: Float? = null) {
 
     enum class BettingAction {
         NONE, SMALLBLIND, BIGBLIND,
@@ -25,7 +25,7 @@ class BettingDecision(val bettingAction: BettingAction, var raiseAmount: RaiseAm
         @JvmStatic
         val RAISE_MIN = BettingDecision(BettingAction.RAISE, RaiseAmount.RAISE_MIN)
         @JvmStatic
-        fun RAISE_CUSTOM(amount: Int): BettingDecision {
+        fun RAISE_CUSTOM(amount: Float): BettingDecision {
             return BettingDecision(BettingAction.RAISE, RaiseAmount.RAISE_CUSTOM, amount)
         }
     }

@@ -17,7 +17,7 @@ abstract class PlayerController {
         playerState.canCheck = game.canCheck(player)
         playerState.progress = 1.0f
 
-        playerState.minBettingAmount = minOf(playerState.money , maxOf(game.tableState.highestBet() - playerState.bettingAmount, 20))
+        playerState.minBettingAmount = minOf(playerState.money , maxOf(game.tableState.highestBet() - playerState.bettingAmount, 20f))
         playerState.sliderBettingState = playerState.minBettingAmount
 
         // TODO

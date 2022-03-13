@@ -14,14 +14,14 @@ import poklin.model.bet.BettingDecision.Companion.RAISE_CUSTOM
 
 internal class PlayRound3WithPlayersTest {
 
-    class Test3PlayersGameProperties : GameProperties(20, 10, dealerSeat = 1) {
+    class Test3PlayersGameProperties : GameProperties(20f, 10f, dealerSeat = 1) {
         val player1Controller = PlayerControllerBettingDecisionFifo()
         val player2Controller = PlayerControllerBettingDecisionFifo()
         val player3Controller = PlayerControllerBettingDecisionFifo()
 
-        val player1 = Player(1, 1000, player1Controller)
-        val player2 = Player(2, 1000, player2Controller)
-        val player3 = Player(3, 1000, player3Controller)
+        val player1 = Player(1, 1000f, player1Controller)
+        val player2 = Player(2, 1000f, player2Controller)
+        val player3 = Player(3, 1000f, player3Controller)
 
         init {
             addPlayer(player1)
@@ -47,8 +47,8 @@ internal class PlayRound3WithPlayersTest {
         val game = gameController.createGame()
 
         with(testGameProperties) {
-            player1Controller.pushDecision(RAISE_CUSTOM(1000))
-            player2Controller.pushDecision(RAISE_CUSTOM(990))
+            player1Controller.pushDecision(RAISE_CUSTOM(1000f))
+            player2Controller.pushDecision(RAISE_CUSTOM(990f))
             player3Controller.pushDecision(BettingDecision.CALL)
         }
         gameController.play(game)

@@ -11,7 +11,7 @@ import poklin.opponentmodeling.ContextInformation
 class BettingRound(private val game: Game) {
     private val playersBet: MutableMap<Player, Bet>
     val contextInformations: List<ContextInformation> = ArrayList()
-    var highestBet = 0
+    var highestBet = 0f
         private set
 
     fun applyDecision(
@@ -63,16 +63,16 @@ class BettingRound(private val game: Game) {
         return playersBet.containsKey(player)
     }
 
-    val currentPotSize: Int
+    val currentPotSize: Float
         get() {
-            var potSize = 0
+            var potSize = 0f
             for (bet in playersBet.values) {
                 potSize += bet.amount
             }
             return potSize
         }
 
-    fun placeBet(player: Player, action: BettingAction, bet: Int) {
+    fun placeBet(player: Player, action: BettingAction, bet: Float) {
         val previousBet = getPlayerBet(player)
         val previousBetAmount = previousBet.amount
         //Logger.get().log("Player #" + player.getNumber() + " placeBet:" + bet);
@@ -83,21 +83,21 @@ class BettingRound(private val game: Game) {
 
         if (bet + previousBetAmount > highestBet) {
             highestBet = bet + previousBetAmount
-        } else require(!(bet + previousBetAmount < highestBet && player.money != 0)) { "You can't bet less than the higher bet (bet:" + bet + " highestBet:" + highestBet + ") player:" + player + " money:" + player.money }
+        } else require(!(bet + previousBetAmount < highestBet && player.money != 0f)) { "You can't bet less than the higher bet (bet:" + bet + " highestBet:" + highestBet + ") player:" + player + " money:" + player.money }
         getPlayerBet(player).amount = bet + previousBetAmount
         getPlayerBet(player).action = action
     }
 
-    fun getBetForPlayer(player: Player): Int {
+    fun getBetForPlayer(player: Player): Float {
         return if (hasPlayerBet(player)) {
             getPlayerBet(player).amount
-        } else 0
+        } else 0f
     }
 
     // TODO duplicate code avec pots size ??
-    val totalBets: Int
+    val totalBets: Float
         get() { // TODO duplicate code avec pots size ??
-            var totalBets = 0
+            var totalBets = 0f
             for (bet in playersBet.values) {
                 totalBets += bet.amount
             }
@@ -147,7 +147,7 @@ class BettingRound(private val game: Game) {
         // soit quand tous les joueurs qui ne se sont pas couchés et qui n'ont pas misé tout leur tapis
         // (donc ceux qui peuvent encore parler)
         // ont parlé et misé le même montant, qu'il soit nul ou non
-        var previousBetAmount: Int? = null
+        var previousBetAmount: Float? = null
         playersBet.forEach { (key, value) ->
             if (value.action !== FOLD && key.money > 0) {
                 if (previousBetAmount == null) {

@@ -6,7 +6,7 @@ import poklin.model.bet.BettingDecision
 import poklin.model.cards.Card
 import java.util.*
 
-class Player(val seat: Int, money: Int, val playerController: PlayerController) {
+class Player(val seat: Int, money: Float, val playerController: PlayerController) {
 
     val playerState = PlayerState("Player${seat}", seat)
 
@@ -14,7 +14,7 @@ class Player(val seat: Int, money: Int, val playerController: PlayerController) 
         playerState.money = money
     }
 
-    var money: Int = money
+    var money: Float = money
         get() = field
         set(value) {
             field = value
@@ -56,12 +56,12 @@ class Player(val seat: Int, money: Int, val playerController: PlayerController) 
         return playerController.doDecide(this, game)
     }
 
-    fun removeMoney(amount: Int) {
+    fun removeMoney(amount: Float) {
         money -= amount
         playerState?.money = money
     }
 
-    fun addMoney(amount: Int) {
+    fun addMoney(amount: Float) {
         money += amount
         playerState?.money = money
     }

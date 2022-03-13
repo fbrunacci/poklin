@@ -15,25 +15,25 @@ internal class BettingRoundTest {
     @Throws(Exception::class)
     fun setUp() {
         players.clear()
-        players.add(Player(1, 100, PlayerControllerNormal()))
-        players.add(Player(2, 100, PlayerControllerNormal()))
+        players.add(Player(1, 100f, PlayerControllerNormal()))
+        players.add(Player(2, 100f, PlayerControllerNormal()))
     }
 
-    val gameProperties = GameProperties(20, 10, 1)
-    val tableState = TableState(gameProperties)
+    val gameProperties = GameProperties(20f, 10f, 1)
+    val tableState = TableState()
 
     @Test
     fun testPlayerCanBetWhenRoundStart() {
-        val game = Game(tableState, players, 10, 20, dealerSeat = 1)
+        val game = Game(tableState, players, 10f, 20f, dealerSeat = 1)
         val bettingRound = BettingRound(game)
         Assert.assertTrue(bettingRound.playerCanBet())
     }
 
     @Test
     fun testPlayerCanBetWhenP2HasNoActionStart() {
-        val game = Game(tableState, players, 10, 20, dealerSeat = 1)
+        val game = Game(tableState, players, 10f, 20f, dealerSeat = 1)
         val bettingRound = BettingRound(game)
-        bettingRound.placeBet(players.iterator().next(), RAISE, 10)
+        bettingRound.placeBet(players.iterator().next(), RAISE, 10f)
         Assert.assertTrue(bettingRound.playerCanBet())
     }
 }

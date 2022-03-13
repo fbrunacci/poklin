@@ -1,0 +1,21 @@
+Stage #3017237436: Holdem  No Limit $1 - 2009-07-01 00:00:09 (ET)
+Table: INDIANA ST (Real Money) Seat #5 is the dealer
+Seat 5 - vETYfpoA+FhBercnDPJrRw ($197 in chips)
+Seat 6 - DeZAZcPNNQ5w+Wb+5ujZdA ($200.30 in chips)
+Seat 2 - AiiJXMM0CfYl69+Nq3jyfA ($78.50 in chips)
+Seat 3 - id+sbECX+YdI8qhMhpje+g ($81.60 in chips)
+DeZAZcPNNQ5w+Wb+5ujZdA - Posts small blind $0.50
+id+sbECX+YdI8qhMhpje+g - Posts big blind $1
+*** POCKET CARDS ***
+vETYfpoA+FhBercnDPJrRw - Folds
+DeZAZcPNNQ5w+Wb+5ujZdA - Raises $2.50 to $3
+id+sbECX+YdI8qhMhpje+g - Folds
+DeZAZcPNNQ5w+Wb+5ujZdA - returned ($2) : not called
+*** SHOW DOWN ***
+DeZAZcPNNQ5w+Wb+5ujZdA - Does not show
+DeZAZcPNNQ5w+Wb+5ujZdA Collects $2 from main pot
+*** SUMMARY ***
+Total Pot($2)
+Seat 3: id+sbECX+YdI8qhMhpje+g (big blind) Folded on the POCKET CARDS
+Seat 5: vETYfpoA+FhBercnDPJrRw (dealer) Folded on the POCKET CARDS
+Seat 6: DeZAZcPNNQ5w+Wb+5ujZdA (small blind) collected Total ($2)

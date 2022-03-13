@@ -3,8 +3,8 @@ package poklin
 import java.util.*
 
 open class GameProperties(
-    val bigBlind: Int,
-    val smallBlind: Int,
+    val bigBlind: Float,
+    val smallBlind: Float,
     var dealerSeat: Int
 ) {
     val players = LinkedList<Player>()

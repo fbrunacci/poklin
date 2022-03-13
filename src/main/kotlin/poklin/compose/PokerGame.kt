@@ -31,10 +31,10 @@ import poklin.utils.TableStateLogger
 
 @Composable
 fun PokerGame() {
-    val gameProperties = GameProperties(20, 10, 1)
-    gameProperties.addPlayer(Player(1, 1000, AskPlayerController(0)))
-    gameProperties.addPlayer(Player(2, 1000, AskPlayerController(0)))
-    gameProperties.addPlayer(Player(3, 1000, AskPlayerController(0)))
+    val gameProperties = GameProperties(20f, 10f, 1)
+    gameProperties.addPlayer(Player(1, 1000f, AskPlayerController(0)))
+    gameProperties.addPlayer(Player(2, 1000f, AskPlayerController(0)))
+    gameProperties.addPlayer(Player(3, 1000f, AskPlayerController(0)))
 //    gameProperties.addPlayer(Player(4, 1000, AskPlayerController()))
 //    gameProperties.addPlayer(Player(4, 1000, PlayerControllerNormal()))
 //    gameProperties.addPlayer(Player(5, 1000, PlayerControllerNormal()))
@@ -142,14 +142,14 @@ fun BettingChoiceButton(playerState: PlayerState) {
                 text = "Rmin",
                 onClick = {
                     playerState.bettingDecision = BettingDecision.BettingAction.RAISE
-                    playerState.bettingAmount = 20
+                    playerState.bettingAmount = 20f
                     playerState.waitForDecision = false
                 })
             BetButton(
                 text = "Bet",
                 onClick = {
                     playerState.bettingDecision = BettingDecision.BettingAction.RAISE
-                    playerState.bettingAmount = playerState.sliderBettingState.toInt()
+                    playerState.bettingAmount = playerState.sliderBettingState
                     playerState.waitForDecision = false
                 })
             Text(
@@ -161,7 +161,7 @@ fun BettingChoiceButton(playerState: PlayerState) {
                 steps = 100,
                 colors = SliderDefaults.colors(thumbColor = MaterialTheme.colors.secondary),
                 onValueChange = { newValue ->
-                    playerState.sliderBettingState = newValue.toInt()
+                    playerState.sliderBettingState = newValue
                 }
             )
         }

@@ -20,13 +20,13 @@ internal class PlayGamesTest {
     @Before
     @Throws(Exception::class)
     fun setUp() {
-        gameProperties = GameProperties(20, 10, 1)
+        gameProperties = GameProperties(20f, 10f, 1)
         with(gameProperties) {
-            addPlayer(Player(1, 1000, PlayerControllerBluff()))
-            addPlayer(Player(2, 1000, PlayerControllerBluff()))
-            addPlayer(Player(3, 1000, PlayerControllerNormal()))
-            addPlayer(Player(4, 1000, PlayerControllerNormal()))
-            addPlayer(Player(5, 1000, PlayerControllerNormal()))
+            addPlayer(Player(1, 1000f, PlayerControllerBluff()))
+            addPlayer(Player(2, 1000f, PlayerControllerBluff()))
+            addPlayer(Player(3, 1000f, PlayerControllerNormal()))
+            addPlayer(Player(4, 1000f, PlayerControllerNormal()))
+            addPlayer(Player(5, 1000f, PlayerControllerNormal()))
         }
         injector = Guice.createInjector(TexasModule(), ConsoleLoggerModule(), gameProperties.toModule())
         injector.injectMembers(this)
@@ -42,7 +42,7 @@ internal class PlayGamesTest {
 
             val playerWithMoney = gameProperties.players.filter { player -> player.money > 0 }
             if (playerWithMoney.size == 1) {
-                gameProperties.players.forEach { player -> player.money = 1000 }
+                gameProperties.players.forEach { player -> player.money = 1000f }
             }
         }
     }

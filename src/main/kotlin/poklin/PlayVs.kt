@@ -16,9 +16,9 @@ fun main(args : Array<String>) {
 class PlayVs {
 
     fun playVsRound() {
-        val gameProperties = GameProperties(20, 10, 1)
-        gameProperties.addPlayer(Player(1, 1000, PlayerControllerBluff()))
-        gameProperties.addPlayer(Player(2, 1000, PlayerControllerBluff()))
+        val gameProperties = GameProperties(20f, 10f, 1)
+        gameProperties.addPlayer(Player(1, 1000f, PlayerControllerBluff()))
+        gameProperties.addPlayer(Player(2, 1000f, PlayerControllerBluff()))
         var injector = Guice.createInjector(TexasModule(), object : KotlinModule() {
             override fun configure() {
                 bind<ILogger>().to<ConsoleLogger>().`in`<Singleton>()
@@ -32,7 +32,7 @@ class PlayVs {
 
             val playerWithMoney = gameProperties.players.filter { player -> player.money > 0 }
             if (playerWithMoney.size == 1) {
-                gameProperties.players.forEach { player -> player.money = 1000 }
+                gameProperties.players.forEach { player -> player.money = 1000f }
             }
         }
     }

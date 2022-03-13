@@ -5,9 +5,9 @@ import poklin.compose.state.TableState
 class Pot {
 
     private val sidePots: MutableList<SidePot> = ArrayList()
-    private val playerContribution: MutableMap<Player, Int> = HashMap()
+    private val playerContribution: MutableMap<Player, Float> = HashMap()
 
-    fun contributePot(amount: Int, player: Player) {
+    fun contributePot(amount: Float, player: Player) {
         player.playerState.moneyPutInPot += amount
 
         if (!playerContribution.containsKey(player)) {
@@ -27,7 +27,7 @@ class Pot {
                 } else {
                     // Partial call (all-in); redistribute pots.
                     sidePots.add(pot.split(player, amount))
-                    amount = 0
+                    amount = 0f
                 }
             }
             if (amount <= 0) {
@@ -45,17 +45,17 @@ class Pot {
         return sidePots
     }
 
-    fun getPlayerContribution(player: Player): Int {
-        return playerContribution[player] ?: 0
+    fun getPlayerContribution(player: Player): Float {
+        return playerContribution[player] ?: 0f
     }
 
-    fun getMaxContribution(): Int {
-        return playerContribution.values.maxOrNull() ?: 0
+    fun getMaxContribution(): Float {
+        return playerContribution.values.maxOrNull() ?: 0f
     }
 
-    val totalPot: Int
+    val totalPot: Float
         get() {
-            var totalPot = 0
+            var totalPot = 0f
             for (pot in sidePots) {
                 totalPot += pot.value
             }

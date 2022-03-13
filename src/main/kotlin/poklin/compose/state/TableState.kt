@@ -8,29 +8,26 @@ import com.google.inject.Inject
 import poklin.GameProperties
 import poklin.model.bet.BettingDecision.BettingAction.NONE
 
-class TableState @Inject constructor(
-    private val gameProperties: GameProperties
-) {
+class TableState {
 
-    fun newGame() {
-        pot = 0
+    fun newGame(dealerSeat: Int) {
+        pot = 0f
         sharedCard1 = ""
         sharedCard2 = ""
         sharedCard3 = ""
         sharedCard4 = ""
         sharedCard5 = ""
         playersState.forEach { state ->
-            state.moneyPutInPot = 0
+            state.moneyPutInPot = 0f
             state.bettingDecision = NONE
-            state.bettingAmount = 0
+            state.bettingAmount = 0f
             state.card1 = ""
             state.card2 = ""
-            state.dealer = false
-            state.dealer = gameProperties.dealerSeat == state.seat
+            state.dealer = dealerSeat == state.seat
         }
     }
 
-    var pot by mutableStateOf(0)
+    var pot by mutableStateOf(0f)
     val playersState = mutableStateListOf<PlayerState>()
 
     var log by mutableStateOf("")
@@ -45,7 +42,7 @@ class TableState @Inject constructor(
         return playersState.first { playerState -> playerState.seat == seat }
     }
 
-    fun highestBet(): Int {
-        return playersState.maxOfOrNull { it.bettingAmount } ?: 0
+    fun highestBet(): Float {
+        return playersState.maxOfOrNull { it.bettingAmount } ?: 0f
     }
 }

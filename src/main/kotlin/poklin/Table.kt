@@ -56,7 +56,7 @@ class Table(val maxSeats: Int, players: List<Player>, private val dealerSeat: In
         }
         // inc
         currentPlayerSeat = (currentPlayerSeat + 1) % maxSeats
-        while (!inGamePlayers.contains(playersMap[currentPlayerSeat]) || playersMap[currentPlayerSeat]!!.money == 0) {
+        while (!inGamePlayers.contains(playersMap[currentPlayerSeat]) || playersMap[currentPlayerSeat]!!.money == 0f) {
             currentPlayerSeat = (currentPlayerSeat + 1) % maxSeats
         }
         return currentPlayer()

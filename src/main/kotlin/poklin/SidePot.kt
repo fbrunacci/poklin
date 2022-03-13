@@ -1,6 +1,6 @@
 package poklin
 
-class SidePot(var bet: Int) {
+class SidePot(var bet: Float) {
 
     val contributors: MutableSet<Player> = HashSet()
 
@@ -12,10 +12,10 @@ class SidePot(var bet: Int) {
         return contributors.contains(player)
     }
 
-    val potSize: Int
+    val potSize: Float
         get() = bet * contributors.size
 
-    fun split(player: Player, partialBet: Int): SidePot {
+    fun split(player: Player, partialBet: Float): SidePot {
         val sidePot = SidePot(bet - partialBet)
         for (contributer in contributors) {
             sidePot.addContributer(contributer)
@@ -26,11 +26,11 @@ class SidePot(var bet: Int) {
     }
 
     fun clear() {
-        bet = 0
+        bet = 0f
         contributors.clear()
     }
 
-    val value: Int
+    val value: Float
         get() = bet * contributors.size
 
     override fun toString(): String {

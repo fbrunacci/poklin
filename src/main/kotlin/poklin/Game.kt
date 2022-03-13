@@ -11,7 +11,7 @@ import poklin.opponentmodeling.ContextAction
 import poklin.opponentmodeling.ContextInformation
 import java.util.*
 
-open class Game(val tableState: TableState, val players: LinkedList<Player>, val smallBlind: Int, val bigBlind: Int, val deck: IDeck = Deck(), dealerSeat: Int) {
+open class Game(val tableState: TableState, val players: LinkedList<Player>, val smallBlind: Float, val bigBlind: Float, val deck: IDeck = Deck(), dealerSeat: Int) {
 
     val pot: Pot = Pot()
     val table = Table(6, players, dealerSeat)
@@ -32,9 +32,9 @@ open class Game(val tableState: TableState, val players: LinkedList<Player>, val
         return bettingRound
     }
 
-    val totalBets: Int
+    val totalBets: Float
         get() {
-            var totalBets = 0
+            var totalBets = 0f
             for (bettingRound in bettingRounds) {
                 totalBets += bettingRound.totalBets
             }
