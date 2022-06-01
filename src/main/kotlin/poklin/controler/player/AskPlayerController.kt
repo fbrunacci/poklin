@@ -14,12 +14,19 @@ class AskPlayerController(val totalWaitTime: Int = 10000) : PlayerController() {
     override fun decide(player: Player, currentGame: Game, cards: List<Card>): BettingDecision {
         val playerState = player.playerState!!
 
-        var waitTime = totalWaitTime
-        while ((totalWaitTime == 0 || waitTime > 0) && playerState.waitForDecision) {
+        var waitTime = 0
+        while (waitTime <= totalWaitTime && playerState.waitForDecision) {
             Thread.sleep(500)
-            waitTime -= 500
-            playerState.progress = (waitTime.toFloat() / totalWaitTime.toFloat()).takeIf { totalWaitTime != 0 } ?: 100f
+            waitTime += 500
+            playerState.progress = 1 - (waitTime / totalWaitTime.toFloat())
         }
+
+//        var p = 0
+//        while (playerState.waitForDecision) {
+//            playerState.progress = 1 - (p.toFloat() / 100f)
+//            Thread.sleep(500)
+//            p++
+//        }
 
 
         return when (playerState.bettingDecision) {

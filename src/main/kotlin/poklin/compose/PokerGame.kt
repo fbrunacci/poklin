@@ -24,6 +24,7 @@ import poklin.compose.state.PlayerState
 import poklin.compose.state.TableState
 import poklin.controler.PokerController
 import poklin.controler.player.AskPlayerController
+import poklin.controler.player.PlayerControllerNormal
 import poklin.injection.TexasModule
 import poklin.model.bet.BettingDecision
 import poklin.utils.ILogger
@@ -32,12 +33,12 @@ import poklin.utils.TableStateLogger
 @Composable
 fun PokerGame() {
     val gameProperties = GameProperties(20f, 10f, 1)
-    gameProperties.addPlayer(Player(1, 1000f, AskPlayerController(0)))
-    gameProperties.addPlayer(Player(2, 1000f, AskPlayerController(0)))
-    gameProperties.addPlayer(Player(3, 1000f, AskPlayerController(0)))
-//    gameProperties.addPlayer(Player(4, 1000, AskPlayerController()))
-//    gameProperties.addPlayer(Player(4, 1000, PlayerControllerNormal()))
-//    gameProperties.addPlayer(Player(5, 1000, PlayerControllerNormal()))
+    gameProperties.addPlayer(Player(1, 1000f, AskPlayerController()))
+    gameProperties.addPlayer(Player(2, 1000f, AskPlayerController()))
+    gameProperties.addPlayer(Player(3, 1000f, AskPlayerController()))
+//    gameProperties.addPlayer(Player(4, 1000f, AskPlayerController()))
+    gameProperties.addPlayer(Player(4, 1000f, PlayerControllerNormal()))
+    gameProperties.addPlayer(Player(5, 1000f, PlayerControllerNormal()))
 
     var injector = Guice.createInjector(TexasModule(), object : KotlinModule() {
         override fun configure() {

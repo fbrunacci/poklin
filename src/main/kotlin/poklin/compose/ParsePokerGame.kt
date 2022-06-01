@@ -13,20 +13,21 @@ import androidx.compose.ui.unit.dp
 import poklin.compose.composable.PlayerInfo
 import poklin.compose.state.TableState
 import poklin.parser.AbsParser
+import poklin.parser.ParseGameScanner
 import poklin.utils.TableStateLogger
 import java.io.File
-import java.nio.file.Files
 
 @Composable
 fun ParsePokerGame() {
-    var play by mutableStateOf(false)
+    var hasNextLine by mutableStateOf(true)
     val tableState = remember { TableState() }
     val tableStateLogger = TableStateLogger(tableState)
     val logScrollState = rememberScrollState()
 
     val parser = AbsParser(tableState, tableStateLogger)
     val url = AbsParser.javaClass.getResource("aa_sample.txt")
-    val f = File(url.toURI())
+    val file = File(url.toURI())
+    val parseGameScanner = ParseGameScanner(file, parser)
 
     MaterialTheme(colors = darkColors()) {
         Surface(modifier = Modifier.fillMaxSize()) {
@@ -36,16 +37,10 @@ fun ParsePokerGame() {
                 ) {
                     MainScreenButton(
                         title = "Play!",
-                        enabled = !play,
+                        enabled = hasNextLine,
                         onClick = {
-                            play = true
-                            Files.lines(f.toPath()).use { linesStream ->
-                                linesStream.forEach { line: Any? ->
-                                    parser.parseLine(
-                                        (line as String?)!!
-                                    )
-                                }
-                            }
+                            parseGameScanner.scanNextLine()
+                            hasNextLine = parseGameScanner.hasNextLine()
                         }
                     )
                     Row {

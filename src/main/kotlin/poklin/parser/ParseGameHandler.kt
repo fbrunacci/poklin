@@ -17,8 +17,8 @@ class ParseGameHandler(val tableState: TableState) : IParseGameHandler {
 
     }
 
-    override fun addPlayer(name: String?, seat: Int, chips: Float, dealer : Boolean) {
-        val playerState = PlayerState("Player" + seat, seat)
+    override fun addPlayer(name: String, seat: Int, chips: Float, dealer : Boolean) {
+        val playerState = PlayerState(name, seat)
         playerState.dealer = dealer
         playerState.money = chips
         tableState.playersState.add(playerState)

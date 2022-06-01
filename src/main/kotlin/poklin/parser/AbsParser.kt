@@ -9,9 +9,9 @@ import poklin.utils.ConsoleLogger
 import poklin.utils.ILogger
 import java.util.regex.Pattern
 
-class AbsParser(val tableState: TableState, private val logger : ILogger = ConsoleLogger()) {
+class AbsParser(val tableState: TableState, private val logger: ILogger = ConsoleLogger()) {
 
-    val gameControler = ParseGameHandler(tableState)
+    val parseGameHandler = ParseGameHandler(tableState)
 
     var smallBlind: Float? = null
     var bigBlind: Float? = null
@@ -33,7 +33,7 @@ class AbsParser(val tableState: TableState, private val logger : ILogger = Conso
         } else if (line.contains(":") && playersName.contains(extractPlayerName(line))) {
             parsePlayerAction(line)
         } else if (line == "*** HOLE CARDS ***") {
-            gameControler.holeCards()
+            parseGameHandler.holeCards()
         } else if (line.startsWith("*** FLOP ***")) {
             parseFlop(line)
         }
@@ -43,7 +43,7 @@ class AbsParser(val tableState: TableState, private val logger : ILogger = Conso
         val m = flopPattern.matcher(line)
         if (m.find()) {
             logger.log("flop: " + m.group(1) + "," + m.group(2) + "," + m.group(3))
-            gameControler.setFlop(parseCard(m.group(1)), parseCard(m.group(2)), parseCard(m.group(3)))
+            parseGameHandler.setFlop(parseCard(m.group(1)), parseCard(m.group(2)), parseCard(m.group(3)))
         }
     }
 
@@ -55,14 +55,29 @@ class AbsParser(val tableState: TableState, private val logger : ILogger = Conso
         val playerName = extractPlayerName(line)
         val action = extractAction(line)
         logger.log("$playerName action:$action")
-        // TODO assert post
 
         // Gzgarry: calls €1
         if (action.startsWith("calls")) {
-            gameControler.setNextPlayerAction(playerName, BettingDecision(BettingDecision.BettingAction.CALL))
+            parseGameHandler.setNextPlayerAction(playerName, BettingDecision(BettingDecision.BettingAction.CALL))
         } else if (action.startsWith("checks")) {
-            gameControler.setNextPlayerAction(playerName, BettingDecision(BettingDecision.BettingAction.CHECK))
-            //} else if ( action.startsWith("") ) {
+            parseGameHandler.setNextPlayerAction(playerName, BettingDecision(BettingDecision.BettingAction.CHECK))
+        } else if (action.startsWith("Post")) {
+            val m = amountPattern.matcher(line)
+            if (m.find()) {
+                val amount = m.group(1).toFloat()
+                if (action.contains("small blind")) {
+                    parseGameHandler.setNextPlayerAction(
+                        playerName,
+                        BettingDecision(BettingDecision.BettingAction.SMALLBLIND, amount = amount)
+                    )
+                } else {
+                    parseGameHandler.setNextPlayerAction(
+                        playerName,
+                        BettingDecision(BettingDecision.BettingAction.BIGBLIND, amount = amount)
+                    )
+                }
+            }
+
             //} else if ( action.startsWith("") ) {
             //} else if ( action.startsWith("") ) {
         }
@@ -83,7 +98,7 @@ class AbsParser(val tableState: TableState, private val logger : ILogger = Conso
             val seat = m.group(1).toInt()
             val chips = m.group(3).toFloat()
             playersName.add(name)
-            gameControler.addPlayer(name, seat, chips, seat == dealerSeat)
+            parseGameHandler.addPlayer(name, seat, chips, seat == dealerSeat)
         }
     }
 
@@ -115,5 +130,7 @@ class AbsParser(val tableState: TableState, private val logger : ILogger = Conso
 
         // Table: INDIANA ST (Real Money) Seat #5 is the dealer
         private val tablePattern = Pattern.compile("Table: .* Seat #(\\d*) is the dealer")
+
+        private val amountPattern = Pattern.compile("\\$(\\d*?\\.?\\d*)")
     }
 }
